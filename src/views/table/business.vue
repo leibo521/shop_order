@@ -13,7 +13,7 @@
           </el-form-item>
 
           <el-form-item>
-            <el-button type="primary" plain @click="fetchData()"
+            <el-button type="primary" plain @click="fetchData"
               >查询</el-button
             >
             <el-button type="primary" plain @click="dialogDetail = true"
@@ -23,6 +23,7 @@
         </el-col>
       </el-row>
     </el-form>
+
     <el-table
       v-loading="listLoading"
       :data="list"
@@ -31,57 +32,41 @@
       fit
       highlight-current-row
     >
-      <el-table-column align="center" label="用户编号" width="95">
+      <el-table-column align="center" label="网点编号" width="95">
         <template slot-scope="scope">
-          {{ scope.row.cId }}
+          {{ scope.row.bId }}
         </template>
       </el-table-column>
 
-      <el-table-column label="用户姓名" align="center">
+      <el-table-column label="网点姓名" align="center">
         <template slot-scope="scope">
           <span
-            @click="handleDetail(scope.row.id)"
+            @click="handleDetail(scope.row.bName)"
             style="color: #409eff; cursor: pointer"
-            >{{ scope.row.cName }}</span
+            >{{ scope.row.bName }}</span
           >
         </template>
       </el-table-column>
 
-      <!-- <el-table-column label="用户密码" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.cPassword }}</span>
-        </template>
-      </el-table-column> -->
 
-      <el-table-column label="用户手机" align="center">
+      <el-table-column label="网点电话" align="center">
         <template slot-scope="scope">
-          {{ scope.row.cPhone }}
+          {{ scope.row.bPhone }}
         </template>
       </el-table-column>
 
-      <el-table-column label="地址" align="center">
+      <el-table-column label="网点地址" align="center">
         <template slot-scope="scope">
-          {{ scope.row.cAddress }}
+          {{ scope.row.bAddress }}
         </template>
       </el-table-column>
 
-      <el-table-column label="绑定微信" align="center">
-        <template slot-scope="scope">
-          {{ scope.row.cWechat }}
-        </template>
-      </el-table-column>
 
-      <el-table-column label="用户类型" align="center">
-        <template slot-scope="scope">
-          {{ scope.row.cType == 1 ? "信任用户" : "" }}
-          {{ scope.row.cType == 2 ? "常投诉用户" : "" }}
-        </template>
-      </el-table-column>
 
       <el-table-column label="操作" width="200" align="center">
         <template slot-scope="scope">
           <el-button
-            @click="update(scope.row.cId)"
+            @click="update(scope.row.bId)"
             class="mg-l"
             type="primary"
             size="mini"
@@ -90,7 +75,7 @@
           >
 
           <el-button
-            @click="handleDel(scope.row.cId)"
+            @click="handleDel(scope.row.bId)"
             class="mg-l"
             type="danger"
             size="mini"
@@ -101,24 +86,24 @@
       </el-table-column>
     </el-table>
 
-    <el-dialog title="新增用户" :visible.sync="dialogDetail">
+    <el-dialog title="新增网点" :visible.sync="dialogDetail">
       <el-form
         :model="form"
         :rules="ruleForm"
         class="add-form"
         label-position="left"
       >
-        <el-form-item label="用户名" prop="orderNumber">
-          <el-input v-model="ruleForm.cName"></el-input>
+        <el-form-item label="网点名字" prop="orderNumber">
+          <el-input v-model="ruleForm.bName"></el-input>
         </el-form-item>
-        <el-form-item label="用户密码" prop="clientAddress">
-          <el-input v-model="ruleForm.cPassword"></el-input>
+        <el-form-item label="网点密码" prop="clientAddress">
+          <el-input v-model="ruleForm.bPassword"></el-input>
         </el-form-item>
-        <el-form-item label="用户手机" prop="clientName">
-          <el-input v-model="ruleForm.cPhone"></el-input>
+        <el-form-item label="网点电话" prop="clientName">
+          <el-input v-model="ruleForm.bPhone"></el-input>
         </el-form-item>
-        <el-form-item label="用户地址" prop="clientPhone">
-          <el-input v-model="ruleForm.cAddress"></el-input>
+        <el-form-item label="网点地址" prop="clientPhone">
+          <el-input v-model="ruleForm.bAddress"></el-input>
         </el-form-item>
 
         <el-form-item>
@@ -128,24 +113,24 @@
       </el-form>
     </el-dialog>
 
-    <el-dialog title="修改用户信息" :visible.sync="updateUserDetails">
+    <el-dialog title="修改网点信息" :visible.sync="updateUserDetails">
       <el-form
         :model="form"
         :rules="updateobj"
         class="add-form"
         label-position="left"
       >
-        <el-form-item label="用户名" prop="orderNumber">
-          <el-input v-model="updateobj.cName"></el-input>
+        <el-form-item label="网点名" prop="orderNumber">
+          <el-input v-model="updateobj.bName"></el-input>
         </el-form-item>
-        <el-form-item label="用户密码" prop="clientAddress">
-          <el-input v-model="updateobj.cPassword"></el-input>
+        <el-form-item label="网点密码" prop="clientAddress">
+          <el-input v-model="updateobj.bPassword"></el-input>
         </el-form-item>
-        <el-form-item label="用户手机" prop="clientName">
-          <el-input v-model="updateobj.cPhone"></el-input>
+        <el-form-item label="网点电话" prop="clientName">
+          <el-input v-model="updateobj.bPhone"></el-input>
         </el-form-item>
-        <el-form-item label="用户地址" prop="clientPhone">
-          <el-input v-model="updateobj.cAddress"></el-input>
+        <el-form-item label="网点地址" prop="clientPhone">
+          <el-input v-model="updateobj.bAddress"></el-input>
         </el-form-item>
 
         <el-form-item>
@@ -205,14 +190,14 @@ export default {
   methods: {
     fetchData() {
       this.listLoading = true;
-      getCostumer(this.listQuery).then((response) => {
+      getBusiness(this.listQuery).then((response) => {
         this.list = response.data.list;
         this.total = response.data.total;
         this.listLoading = false;
       });
     },
     handleAdd() {
-      addCostumer(this.ruleForm).then((response) => {
+      addBusiness(this.ruleForm).then((response) => {
         if (response.code === 200) {
           this.$message.success(response.message);
           this.dialogDetail = false;
@@ -235,10 +220,10 @@ export default {
       })
         .then(() => {
           let data2 = {
-            cId: id,
+            bId: id,
           };
           console.log(data2);
-          delCostumer(data2).then((res) => {
+          delBusiness(data2).then((res) => {
             if (res.code == "200") {
               this.$message.success(res.message);
               this.fetchData();
@@ -259,17 +244,17 @@ export default {
         });
     },
     // 点击修改按钮
-    update(cId){
+    update(bId){
       this.updateUserDetails = true
-      getCostumer({"cId":cId}).then(response => {
-        response.data.list[0].cPassword = ''
+      getBusiness({"bId":bId}).then(response => {
+        response.data.list[0].bPassword = ''
         this.updateobj = response.data.list[0]
-        this.updateobj.cId = cId
+        this.updateobj.bId = bId
       })
     },
     // 提交修改
     submitUpdate(){
-      updateCostumer(this.updateobj).then(response => {
+      updateBusiness(this.updateobj).then(response => {
         if(response.code === 200){
           this.$message.success(response.message)
           this.updateobj = {}

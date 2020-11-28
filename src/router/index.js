@@ -119,11 +119,9 @@ export const constantRoutes = [
       {
         path: 'index',
         name: 'logIndex',
-        component: () => import('@/views/table/index'),
+        component: () => import('@/views/table/logger'),
         meta: { title: '操作日志管理', icon: 'table' }
-      },
- 
-  
+      }
     ]
   },
  

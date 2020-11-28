@@ -102,7 +102,17 @@ export function updateBusiness(data) {
 export function getBusiness(data) {
   return request({
     url: '/api/business/select',
-    method: 'get',
+    method: 'post',
+    data
+  })
+}
+
+
+// 查询操作日志
+export function getLogger(data) {
+  return request({
+    url: '/api/logger/getLogger',
+    method: 'post',
     data
   })
 }

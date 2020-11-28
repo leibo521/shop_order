@@ -152,9 +152,14 @@ export default {
 
     // 查询
     selectLogger(){
+    if(this.dateValue != null) {
       this.listQuery.startTime = this.dateValue[0]
       this.listQuery.endTime = this.dateValue[1]
-      this.fetchData()
+    }else{
+      this.listQuery.startTime = null
+      this.listQuery.endTime = null
+    }
+    this.fetchData()
     }
   },
 };

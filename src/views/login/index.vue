@@ -104,6 +104,7 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
+           sessionStorage.setItem('username',this.loginForm.userPhone)
           login(this.loginForm).then(res=>{
          
             if(res.code==200){

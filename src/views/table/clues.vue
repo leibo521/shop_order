@@ -1,7 +1,28 @@
 <template>
   <div class="app-container">
     
-
+<el-form :inline="true" :model="listQuery" class="demo-form-inline">
+      <el-row>
+       
+          <el-form-item  label="出入库日期">
+               <el-date-picker
+               type="datetime"
+                placeholder="选择日期"
+                value-format="yyyy-MM-dd HH:mm:ss"
+                v-model="listQuery.currentDate"
+                style="width: 100%"
+              ></el-date-picker>
+          </el-form-item>
+       
+          <el-form-item>
+            <el-button type="primary" plain @click="fetchData()"
+              >查询</el-button>
+               <!-- <el-button type="primary"  plain @click="handleAdd()"
+              >新增</el-button> -->
+          </el-form-item>
+      
+      </el-row>
+    </el-form>
     <el-table
       v-loading="listLoading"
       :data="list"
@@ -15,29 +36,35 @@
           {{ scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column label="姓名" align="center">
+      <el-table-column label="快递单号" align="center">
         <template slot-scope="scope">
-         <span @click="handleDetail(scope.row.id)" style="color:#409EFF">{{ scope.row.name }}</span> 
+         <span  style="color:#409EFF">{{ scope.row.number }}</span> 
         </template>
       </el-table-column>
-      <el-table-column label="联系方式" align="center">
+      <el-table-column label="编号" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.phone }}</span>
+          <span>{{ scope.row.ioId }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" align="center">
+      <el-table-column label="出入库类型" align="center">
         <template slot-scope="scope">
-          {{ scope.row.createtime }}
+          {{ scope.row.ioType |statusFilter  }}
         </template>
       </el-table-column>
-      <el-table-column label="贷款额度" align="center">
+   
+      <el-table-column label="时间" align="center">
         <template slot-scope="scope">
-          {{ scope.row.loan_limit }}
+          {{ scope.row.ioTime }}
         </template>
       </el-table-column>
-      <el-table-column label="城市" align="center">
+        <el-table-column label="网店" align="center">
         <template slot-scope="scope">
-          {{ scope.row.city }}
+          {{ scope.row.ioAddress }}
+        </template>
+      </el-table-column>
+         <el-table-column label="操作人" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.ioName }}
         </template>
       </el-table-column>
      
@@ -49,179 +76,29 @@
     <pagination
       v-show="total >= 1"
       :total="total"
-      :page.sync="listQuery.page"
+      :page.sync="listQuery.pageNum"
       :limit.sync="listQuery.pageSize"
       @pagination="fetchData"
     />
-     <el-dialog
-      title="客户详情"
-      :visible.sync="dialogDetail"
-    >
-      <el-form
-        :model="form"
-        class="add-form"
-        label-width="120px"
-        label-position="right"
-      >
-        <el-row>
-          <el-col :span="8">
-            <el-form-item label="姓名">
-              <span >{{form.name}}</span>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="手机号">
-            
-               <span>{{form.phone}}</span>
-            </el-form-item>
-          </el-col>
-           <el-col :span="8">
-                <el-form-item label="身份证号">
-             <span>{{form.idcard}}</span>
-            </el-form-item>
-            </el-col>
-        </el-row>
-        <el-row>
-              <el-col :span="8">
-        <el-form-item label="来自区域">
-           <span>{{form.province}}</span>
-             <span>{{form.city}}</span>
-            </el-form-item>
-            </el-col>
-           <el-col :span="8">
-       <el-form-item label="企业年限">
-             <span>{{form.company_year}}</span>
-            </el-form-item>
-            </el-col>
-          <el-col :span="8">
-        <el-form-item label="芝麻分">
-           <span>{{form.sesame}}</span>
-            
-            </el-form-item>
-            </el-col>
-           
-        </el-row>
-       
-        <el-row>
-          <el-col :span="8">
-             <el-form-item label="寿险">
-            <span>{{form.life_insurance}}</span>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-             <el-form-item label="房产">
-             <span>{{form.house_property}}</span>
-            </el-form-item>
-          </el-col>
-           <el-col :span="8">
-             <el-form-item label="车产">
-              <span>{{form.vehicle_property}}</span>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row  >
-          <el-col :span="8">
-              <el-form-item label="贷款额度">
-              <span>{{form.loan_limit}}</span>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-             <el-form-item label="收入信息">
-              <span>{{form.income}}</span>
-            </el-form-item>
-          </el-col>
-            <el-col :span="8">
-             <el-form-item label="工资发放方式">
-             <span>{{form.salary_type}}</span>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        
-        
-         <el-row> 
-          
-          <el-col :span="8">
-             <el-form-item label="社保公积金">
-           <span>{{form.socialwelfare}}</span>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-             <el-form-item label="微粒贷">
-             <span>{{form.tiny_loan}}</span>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        
-       
-         <el-row>
-              <el-col :span="8">
-             <el-form-item label="学历">
-               <span>{{form.education}}</span>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-             <el-form-item label="贷款目的">
-            <span>{{form.loan_purpose}}</span>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-             <el-form-item label="贷款时间">
-             <span>{{form.loan_time}}</span>
-            </el-form-item>
-          </el-col>
-        </el-row>
-         
-          <el-row>
-          <el-col :span="8">
-             <el-form-item label="职业">
-             <span>{{form.job}}</span>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-             <el-form-item label="工作年限">
-              <span>{{form.job_year}}</span>
-            </el-form-item>
-          </el-col>
-            <el-col :span="8">
-             <el-form-item label="年收入">
-              <span>{{form.company_income }}</span>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        
-      
-          <el-row>
-            <el-col :span="8">
-                   <el-form-item label="信用情况">
-             <span>{{form.credit}}</span>
-            </el-form-item>
-            </el-col>
-            <el-col :span='8'>
-                <el-form-item label="企业地址">
-                  <span>{{form.caddress}}</span>
-                </el-form-item>
-            </el-col>
-             <el-col :span='8'>
-                <el-form-item label="企业名称">
-                  <span>{{form.cname}}</span>
-                </el-form-item>
-            </el-col>
-          </el-row>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="dialogDetail = false">确定</el-button>
-      
-      </div>
-    </el-dialog>
+  
   </div>
 
 </template>
 
 <script>
-import { clueList,getClueInfo} from "@/api/table";
+import { getIoLogger} from "@/api/table";
 import Pagination from "@/components/Pagination"; //
 export default {
- 
+   filters: {
+    statusFilter(status) {
+      const statusMap = {
+        1: "出库",
+        0: "入库",
+       
+      };
+      return statusMap[status];
+    }
+    },
   components: { Pagination },
   data() {
     
@@ -230,42 +107,33 @@ export default {
       list: null,
       listLoading: false,
       total: 0,
-     dialogDetail:false,
+   
       listQuery: {
-        page: 1,
+        pageNum: 1,
         pageSize: 10
       },
-      storeId: "", //门店id
-      form:{},
+    
 
     };
   },
   created() {
    
    
-     this.storeId = this.$route.query.id;
-     console.log(this.storeId)
+   
       this.fetchData();
   },
   methods: {
     
     fetchData() {
       this.listLoading = true;
-      clueList(this.storeId,this.listQuery).then(response => {
+      getIoLogger(this.listQuery).then(response => {
         this.list = response.data.list;
-        this.total = response.data.totals;
+        this.total = response.data.total;
         this.listLoading = false;
       });
     },
     
-    handleDetail(id){
-      this.dialogDetail=true
-      getClueInfo(id).then(res=>{
-        if(res.code==0){
-          this.form=res.data
-        }
-      })
-    }
+ 
   }
 };
 </script>

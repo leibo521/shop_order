@@ -47,11 +47,12 @@ export default {
       this.$store.dispatch('app/toggleSideBar')
     },
      logouts() {
-     logout().then(res=>{
-       if(res.code==0){
-          this.$router.push('/login')
-       }
-     })
+        this.$router.push('/login')
+    //  logout().then(res=>{
+    //    if(res.code==0){
+    //       this.$router.push('/login')
+    //    }
+    //  })
     }
   }
 }

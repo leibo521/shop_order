@@ -81,15 +81,14 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/net/index',
     name: 'netIndex',
-    meta: { title: '网店管理', icon: 'el-icon-s-help' },
+    meta: { title: '网点管理', icon: 'el-icon-s-help' },
     children: [
       {
         path: 'index',
         name: 'netMange',
-        component: () => import('@/views/table/index'),
-        meta: { title: '网店管理', icon: 'table' }
-      },
- 
+        component: () => import('@/views/table/business'),
+        meta: { title: '网点管理', icon: 'table' }
+      }
   
     ]
   },
@@ -103,7 +102,7 @@ export const constantRoutes = [
       {
         path: 'index',
         name: 'userIndex',
-        component: () => import('@/views/table/index'),
+        component: () => import('@/views/table/costumers'),
         meta: { title: '用户管理', icon: 'table' }
       },
  

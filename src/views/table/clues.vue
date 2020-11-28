@@ -13,7 +13,18 @@
                 style="width: 100%"
               ></el-date-picker>
           </el-form-item>
-       
+        <el-form-item label="类型">
+           <el-select clearable v-model="listQuery.type" placeholder="请选择">
+            <el-option
+              label="出库"
+              value="1">
+            </el-option>
+             <el-option
+              label="入库"
+              value="0">
+            </el-option>
+          </el-select>
+        </el-form-item>
           <el-form-item>
             <el-button type="primary" plain @click="fetchData()"
               >查询</el-button>

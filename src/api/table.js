@@ -19,11 +19,9 @@ export function addShopList(data) {
 export function getIoLogger(data) {
   return request({
     url: '/api/logger/getIoLogger',
-    method: 'get',
-    headers:{
-      "Content-Type":"application/x-www-form-urlencoded"
-    },
-    params:data
+    method: 'post',
+ 
+    data
   })
 }
 //数据管理删除

@@ -9,3 +9,10 @@ export function getShopList(data) {
 }
 
 
+export function delData(data) {
+  return request({
+    url: '/api/order/deleteById',
+    method: 'post',
+    data
+  })
+}

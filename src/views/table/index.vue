@@ -92,9 +92,23 @@
           {{ scope.row.createtime }}
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center">
+      <el-table-column label="操作" width="200" align="center">
         <template slot-scope="scope">
-          <a href="javascript:;" @click="handleOut(scope.row.id)"> 出库</a>
+          <el-button
+           @click="handleOut(scope.row.orderId)"
+            class="mg-l"
+            type="primary"
+            size="mini"
+            icon="el-icon-s-tools"
+            >出库</el-button>
+         
+           <el-button
+            @click="handleDel(scope.row.orderId)"
+            class="mg-l"
+            type="danger"
+            size="mini"
+            icon="el-icon-delete"
+            >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -160,7 +174,7 @@
 </template>
 
 <script>
-import { getShopList } from "@/api/table";
+import { getShopList,delData } from "@/api/table";
 import Pagination from "@/components/Pagination"; //
 export default {
   filters: {
@@ -216,6 +230,37 @@ export default {
     },
     handleAdd() {
    this.dialogDetail = true;
+    },
+     handleDel(id) {
+      this.$confirm("确定删除该数据?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "error",
+      })
+        .then(() => {
+          let data2={
+            orderId:id
+          }
+          console.log(data2)
+          delData(data2).then((res) => {
+            if (res.code == "200") {
+              this.$message.success(res.message);
+              this.fetchData();
+            } else {
+              this.$message.error(res.message);
+            }
+          });
+          // this.$message({
+          //   type: 'success',
+          //   message: '删除成功!'
+          // });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
+        });
     },
   },
 };

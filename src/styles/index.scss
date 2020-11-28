@@ -1,0 +1,104 @@
+@import './variables.scss';
+@import './mixin.scss';
+@import './transition.scss';
+@import './element-ui.scss';
+@import './sidebar.scss';
+
+body {
+  height: 100%;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
+}
+
+label {
+  font-weight: 700;
+}
+
+html {
+  height: 100%;
+  box-sizing: border-box;
+}
+
+#app {
+  height: 100%;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+a:focus,
+a:active {
+  outline: none;
+}
+
+a,
+a:focus,
+a:hover {
+  cursor: pointer;
+  color: inherit;
+  text-decoration: none;
+}
+
+div:focus {
+  outline: none;
+}
+
+.clearfix {
+  &:after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
+  }
+}
+.el-input{
+  width: 80%;
+}
+// main-container global css
+.app-container {
+  padding: 20px;
+}
+
+.el-table td, .el-table--medium td{
+  padding: 8px 0;
+  color: #303133FF;
+}
+
+body .el-table th.gutter {
+  display: table-cell !important
+}
+.part_title{
+  margin-top: 30px;
+  // margin-bottom: 30px;
+  position: relative;
+}
+.part_title span{
+  display: block;
+    width: 128px;
+    position: relative;
+    height: 55px;
+    background: url('../assets/title-bg.png') no-repeat;
+    background-size: contain;
+    position: relative;
+    padding: 10px;
+    color: #fff;
+    z-index: 99;
+ 
+ 
+}
+.part_title .span_border{
+  display: block;
+  width: 100%;
+  height: 2px;
+  position: absolute;
+  // left: 100px;
+  top: 28%;
+  background: #429EFF;;
+}

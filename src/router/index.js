@@ -69,7 +69,7 @@ export const constantRoutes = [
       {
         path: 'index',
         name: 'outIndex',
-        component: () => import('@/views/table/index'),
+        component: () => import('@/views/table/clues'),
         meta: { title: '出入库日志', icon: 'table' }
       },
  

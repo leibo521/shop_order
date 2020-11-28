@@ -118,7 +118,7 @@
     </el-table>
     <el-dialog title="新增入库" :visible.sync="dialogDetail">
       <el-form
-        :model="ruleForm"
+        :model="form"
         ref="ruleForm"
         :rules="rules"
         class="add-form"
@@ -327,7 +327,7 @@ export default {
     margin-right: 35px;
   }
 }
-.add-form .el-input {
+.el-input {
   width: 50%;
 }
 </style>

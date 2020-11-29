@@ -115,6 +115,14 @@ export function getLogger(data) {
   })
 }
 
+// --- 出库的接口
+export function outputByAdmin(data) {
+  return request({
+    url: '/api/orderIO/outputByAdmin',
+    method: 'post',
+    data
+  })
+}
 
 
 

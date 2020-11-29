@@ -68,7 +68,7 @@
           {{ scope.row.ioTime }}
         </template>
       </el-table-column>
-        <el-table-column label="网店" align="center">
+        <el-table-column label="网点" align="center">
         <template slot-scope="scope">
           {{ scope.row.ioAddress }}
         </template>

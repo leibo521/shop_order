@@ -22,6 +22,10 @@
           <!-- <el-button type="primary"  plain @click="handleAdd()"
               >新增</el-button> -->
         </el-form-item>
+
+        <el-button type="primary" plain @click="handleAdd"
+          >新增</el-button
+        >
       </el-row>
     </el-form>
     <el-table
@@ -66,6 +70,12 @@
           {{ scope.row.clientAddress }}
         </template>
       </el-table-column>
+      <el-table-column label="数据状态" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.orderStatus == 1 ? "已经出库" : "" }}
+          {{ scope.row.orderStatus == 0 ? "入库中" : "" }}
+        </template>
+      </el-table-column>
       <el-table-column label="入库时间" align="center">
         <template slot-scope="scope">
           {{ scope.row.orderCreateDate }}
@@ -89,21 +99,15 @@
       <el-table-column label="操作" width="280" align="center">
         <template slot-scope="scope">
           <el-button
-            @click="handleAdd(scope.row)"
-            class="mg-l"
-            type="primary"
-            size="mini"
-            icon="el-icon-s-tools"
-            >入库</el-button
-          >
-          <el-button
             @click="handleOut(scope.row.orderId)"
             class="mg-l"
             type="primary"
             size="mini"
             icon="el-icon-s-tools"
-            >出库</el-button
+            :disabled="scope.row.orderStatus == 0 ? false : true"
           >
+            出库
+          </el-button>
 
           <el-button
             @click="handleDel(scope.row.orderId)"
@@ -175,7 +179,7 @@
 </template>
 
 <script>
-import { getShopList, delData, addShopList } from "@/api/table";
+import { getShopList, delData, addShopList, outputByAdmin } from "@/api/table";
 import Pagination from "@/components/Pagination"; //
 export default {
   filters: {
@@ -256,23 +260,21 @@ export default {
     },
     handleAdd(row) {
       this.dialogDetail = true;
-      this.ruleForm.bId = row.bId;
-      this.ruleForm.bName = row.bName;
     },
     submitForm() {
-       this.$refs["ruleForm"].validate((valid) => {
-          if (valid) {
-             addShopList().then((res) => {
-        if (res.code == "200") {
-          this.$message.success(res.message);
-          this.dialogDetail = false;
-          this.fetchData();
-        } else {
-          this.$message.error(res.message);
+      this.$refs["ruleForm"].validate((valid) => {
+        if (valid) {
+          addShopList().then((res) => {
+            if (res.code == "200") {
+              this.$message.success(res.message);
+              this.dialogDetail = false;
+              this.fetchData();
+            } else {
+              this.$message.error(res.message);
+            }
+          });
         }
       });
-          } 
-       })
     },
     handleDel(id) {
       this.$confirm("确定删除该数据?", "提示", {
@@ -297,6 +299,29 @@ export default {
           //   type: 'success',
           //   message: '删除成功!'
           // });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
+        });
+    },
+    handleOut(id) {
+      this.$confirm("确定出库该数据?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "error",
+      })
+        .then(() => {
+          outputByAdmin({ orderId: id }).then((response) => {
+            if (response.code === 200) {
+              this.$message.success(response.message);
+              this.fetchData();
+            } else {
+              this.$message.error(response.message);
+            }
+          });
         })
         .catch(() => {
           this.$message({

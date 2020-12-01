@@ -35,7 +35,7 @@ export const constantRoutes = [
       {
         path: 'stores',
         name: 'stores',
-        component: () => import('@/views/table/index'),
+        component: () => import('@/views/table/total'),
         meta: { title: '数据统计', icon: 'table' }
       },
  
@@ -104,6 +104,23 @@ export const constantRoutes = [
         name: 'userIndex',
         component: () => import('@/views/table/costumers'),
         meta: { title: '用户管理', icon: 'table' }
+      },
+ 
+  
+    ]
+  },
+  {
+    path: '/company',
+    component: Layout,
+    redirect: '/company/index',
+    name: 'company',
+    meta: { title: '快递管理', icon: 'el-icon-s-help' },
+    children: [
+      {
+        path: 'index',
+        name: 'companyIndex',
+        component: () => import('@/views/company/index'),
+        meta: { title: '快递管理', icon: 'table' }
       },
  
   

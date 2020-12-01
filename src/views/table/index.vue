@@ -23,9 +23,9 @@
               >新增</el-button> -->
         </el-form-item>
 
+
         <el-button type="primary" plain @click="handleAdd"
-          >新增</el-button
-        >
+          >新增</el-button>
       </el-row>
     </el-form>
     <el-table
@@ -84,11 +84,6 @@
       <el-table-column label="超限时间" align="center">
         <template slot-scope="scope">
           {{ scope.row.orderExpireTime }}
-        </template>
-      </el-table-column>
-          <el-table-column label="快件类型" align="center">
-        <template slot-scope="scope">
-          {{ scope.row.orderType | orderTypeFilter }}
         </template>
       </el-table-column>
       <el-table-column label="用户状态" align="center">
@@ -192,13 +187,6 @@ export default {
       const statusMap = {
         1: "信任用户",
         2: "常投诉用户",
-      };
-      return statusMap[status];
-    },
-    orderTypeFilter(status) {
-      const statusMap = {
-        1: "快递员数据",
-        0: "普通数据",
       };
       return statusMap[status];
     },

@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-form :inline="true" :model="listQuery" class="demo-form-inline">
       <el-row>
-        <el-col :span="16">
+        <el-col :span="24">
           <el-form-item width="200px" label="手机号">
             <el-input v-model="listQuery.phone" placeholder="手机号"></el-input>
           </el-form-item>
@@ -11,14 +11,14 @@
             <el-input v-model="listQuery.name" placeholder="姓名"></el-input>
           </el-form-item>
 
-          <el-form-item>
+          
             <el-button type="primary" plain @click="fetchData()"
               >查询</el-button
             >
-            <el-button type="primary" plain @click="dialogDetail = true"
+            <el-button style="float:right" type="primary" plain @click="dialogDetail = true"
               >新增</el-button
             >
-          </el-form-item>
+         
         </el-col>
       </el-row>
     </el-form>

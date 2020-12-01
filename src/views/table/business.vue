@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-form :inline="true" :model="listQuery" class="demo-form-inline">
       <el-row>
-        <el-col :span="16">
+        <el-col :span="24">
 
           <el-form-item width="200px" label="手机号">
             <el-input v-model="listQuery.bPhone" placeholder="手机号"></el-input>
@@ -12,14 +12,14 @@
             <el-input v-model="listQuery.bName" placeholder="网店名"></el-input>
           </el-form-item>
 
-          <el-form-item>
+         
             <el-button type="primary" plain @click="fetchData"
               >查询</el-button
             >
-            <el-button type="primary" plain @click="dialogDetail = true"
+            <el-button type="primary" style="float:right" plain @click="dialogDetail = true"
               >新增</el-button
             >
-          </el-form-item>
+          
         </el-col>
       </el-row>
     </el-form>
@@ -246,6 +246,9 @@ export default {
     // 点击修改按钮
     update(bId){
       this.updateUserDetails = true
+      // getBusiness(this.listQuery).then(res=>{
+      //   this.list=res.data.list;
+      // })
       getBusiness({"bId":bId}).then(response => {
         response.data.list[0].bPassword = ''
         this.updateobj = response.data.list[0]

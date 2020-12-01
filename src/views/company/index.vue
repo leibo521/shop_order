@@ -2,24 +2,19 @@
   <div class="app-container">
     <el-form :inline="true" :model="listQuery" class="demo-form-inline">
       <el-row>
-        <el-col :span="16">
-
-          <el-form-item width="200px" label="手机号">
-            <el-input v-model="listQuery.bPhone" placeholder="手机号"></el-input>
+        <el-col :span="24">
+        <el-form-item width="200px" label="快递公司">
+            <el-input v-model="listQuery.companyName" placeholder="快递公司"></el-input>
           </el-form-item>
 
-          <el-form-item width="200px" label="网点名">
-            <el-input v-model="listQuery.companyName" placeholder="网店名"></el-input>
-          </el-form-item>
-
-          <el-form-item>
+          
             <el-button type="primary" plain @click="fetchData"
               >查询</el-button
             >
-            <el-button type="primary" plain @click="dialogDetail = true"
+            <el-button type="primary" style="float:right" plain @click="dialogDetail = true"
               >新增</el-button
             >
-          </el-form-item>
+          
         </el-col>
       </el-row>
     </el-form>
@@ -38,7 +33,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="网点姓名" align="center">
+      <el-table-column label="快递公司" align="center">
         <template slot-scope="scope">
           <span
             @click="handleDetail(scope.row.companyName)"

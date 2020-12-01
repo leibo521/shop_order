@@ -68,8 +68,8 @@
               v-model="value1"
               type="daterange"
               range-separator="至"
-              format="yyyy 年 MM 月 dd 日"
-              value-format="yyyy-MM-dd"
+              format="yyyy-MM-dd"
+              value-format="yyyy-MM-dd HH:mm:ss"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
             >
@@ -135,7 +135,7 @@ export default {
     return {
       list: null,
 outlv:'0%',
-      value1: "",
+      value1: null,
       listQuery: {
         startDate: "",
         endDate: "",
@@ -164,11 +164,10 @@ outlv:'0%',
     },
     fetchData() {
     
-     
-      if (!this.value1) {
-        this.listQuery.startDate = this.value1[0];
-        this.listQuery.endDate = this.value1[1];
-      }
+       if(this.value1!=null){
+        this.listQuery.startDate=this.value1[0];
+      this.listQuery.endDate=this.value1[1];
+     }
       getTotalData(this.listQuery).then((res) => {
         this.list = res.data;
       });

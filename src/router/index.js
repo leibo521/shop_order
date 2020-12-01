@@ -43,6 +43,23 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/update',
+    component: Layout,
+    redirect: '/update/index',
+    name: 'update',
+    meta: { title: '超时限', icon: 'el-icon-s-help' },
+    children: [
+      {
+        path: 'index',
+        name: 'updateIndex',
+        component: () => import('@/views/table/updateTime'),
+        meta: { title: '超时限', icon: 'table' }
+      },
+ 
+  
+    ]
+  },
+  {
     path: '/mange',
     component: Layout,
     redirect: '/mange/data',

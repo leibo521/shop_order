@@ -8,6 +8,14 @@ export function getShopList(data) {
   })
 }
 
+// export function getXX(data){
+//   return request({
+//       url:'/api/order/getShopOrder',
+//       method:'POST',
+//       data
+//   })
+// }
+
 export function addShopList(data) {
   return request({
     url: '/api/order/add',
@@ -169,3 +177,4 @@ export function addCompany(data) {
     data
   })
 }
+

@@ -100,11 +100,6 @@
           {{ scope.row.orderExpireTime }}
         </template>
       </el-table-column>
-          <el-table-column label="快件类型" align="center">
-        <template slot-scope="scope">
-          {{ scope.row.orderType | orderTypeFilter }}
-        </template>
-      </el-table-column>
       <el-table-column label="用户状态" align="center">
         <template slot-scope="scope">
           <span> {{ scope.row.orderStatus | statusFilter }}</span>

@@ -23,9 +23,7 @@
               >新增</el-button> -->
         </el-form-item>
 
-        <el-button type="primary" plain @click="handleAdd"
-          >新增</el-button
-        >
+        <el-button type="primary" plain @click="handleAdd">新增</el-button>
       </el-row>
     </el-form>
     <el-table
@@ -76,6 +74,12 @@
           {{ scope.row.orderStatus == 0 ? "入库中" : "" }}
         </template>
       </el-table-column>
+      <el-table-column label="数据类型" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.orderType == 1 ? "快递员数据" : "" }}
+          {{ scope.row.orderType == 0 ? "普通数据" : "" }}
+        </template>
+      </el-table-column>
       <el-table-column label="入库时间" align="center">
         <template slot-scope="scope">
           {{ scope.row.orderCreateDate }}
@@ -88,7 +92,7 @@
       </el-table-column>
       <el-table-column label="用户状态" align="center">
         <template slot-scope="scope">
-          <span> {{ scope.row.orderStatus | statusFilter }}</span>
+          <span> {{ scope.row.clientStatus | statusFilter }}</span>
         </template>
       </el-table-column>
       <el-table-column label="是否绑定微信" align="center">
@@ -120,6 +124,7 @@
         </template>
       </el-table-column>
     </el-table>
+    
     <el-dialog title="新增入库" :visible.sync="dialogDetail">
       <el-form
         :model="ruleForm"

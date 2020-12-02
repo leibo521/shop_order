@@ -47,11 +47,11 @@
           {{ scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column label="快递单号" align="center">
+      <!-- <el-table-column label="快递单号" align="center">
         <template slot-scope="scope">
          <span  style="color:#409EFF">{{ scope.row.number }}</span> 
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="编号" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.ioId }}</span>

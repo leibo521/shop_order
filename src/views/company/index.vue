@@ -3,16 +3,11 @@
     <el-form :inline="true" :model="listQuery" class="demo-form-inline">
       <el-row>
         <el-col :span="24">
-
-          <el-form-item width="200px" label="手机号">
-            <el-input v-model="listQuery.bPhone" placeholder="手机号"></el-input>
+        <el-form-item width="200px" label="快递公司">
+            <el-input v-model="listQuery.companyName" placeholder="快递公司"></el-input>
           </el-form-item>
 
-          <el-form-item width="200px" label="网点名">
-            <el-input v-model="listQuery.bName" placeholder="网店名"></el-input>
-          </el-form-item>
-
-         
+          
             <el-button type="primary" plain @click="fetchData"
               >查询</el-button
             >
@@ -32,50 +27,33 @@
       fit
       highlight-current-row
     >
-      <el-table-column align="center" label="网点编号" width="95">
+      <el-table-column align="center" label="编号" >
         <template slot-scope="scope">
-          {{ scope.row.bId }}
+          {{ scope.row.companyId }}
         </template>
       </el-table-column>
 
-      <el-table-column label="网点姓名" align="center">
+      <el-table-column label="快递公司" align="center">
         <template slot-scope="scope">
           <span
-            @click="handleDetail(scope.row.bName)"
+            @click="handleDetail(scope.row.companyName)"
             style="color: #409eff; cursor: pointer"
-            >{{ scope.row.bName }}</span
+            >{{ scope.row.companyName }}</span
           >
         </template>
       </el-table-column>
 
 
-      <el-table-column label="网点电话" align="center">
+    
+
+
+
+      <el-table-column label="操作"  align="center">
         <template slot-scope="scope">
-          {{ scope.row.bPhone }}
-        </template>
-      </el-table-column>
-
-      <el-table-column label="网点地址" align="center">
-        <template slot-scope="scope">
-          {{ scope.row.bAddress }}
-        </template>
-      </el-table-column>
-
-
-
-      <el-table-column label="操作" width="200" align="center">
-        <template slot-scope="scope">
-          <el-button
-            @click="update(scope.row.bId)"
-            class="mg-l"
-            type="primary"
-            size="mini"
-            icon="el-icon-s-tools"
-            >修改</el-button
-          >
+         
 
           <el-button
-            @click="handleDel(scope.row.bId)"
+            @click="handleDel(scope.row.companyId)"
             class="mg-l"
             type="danger"
             size="mini"
@@ -86,25 +64,17 @@
       </el-table-column>
     </el-table>
 
-    <el-dialog title="新增网点" :visible.sync="dialogDetail">
+    <el-dialog title="新增快递" :visible.sync="dialogDetail">
       <el-form
         :model="form"
         :rules="ruleForm"
         class="add-form"
         label-position="left"
       >
-        <el-form-item label="网点名字" prop="orderNumber">
-          <el-input v-model="ruleForm.bName"></el-input>
+        <el-form-item label="快递公司名" prop="orderNumber">
+          <el-input v-model="ruleForm.companyName"></el-input>
         </el-form-item>
-        <el-form-item label="网点密码" prop="clientAddress">
-          <el-input v-model="ruleForm.bPassword"></el-input>
-        </el-form-item>
-        <el-form-item label="网点电话" prop="clientName">
-          <el-input v-model="ruleForm.bPhone"></el-input>
-        </el-form-item>
-        <el-form-item label="网点地址" prop="clientPhone">
-          <el-input v-model="ruleForm.bAddress"></el-input>
-        </el-form-item>
+      
 
         <el-form-item>
           <el-button type="primary" @click="handleAdd">确定</el-button>
@@ -113,32 +83,7 @@
       </el-form>
     </el-dialog>
 
-    <el-dialog title="修改网点信息" :visible.sync="updateUserDetails">
-      <el-form
-        :model="form"
-        :rules="updateobj"
-        class="add-form"
-        label-position="left"
-      >
-        <el-form-item label="网点名" prop="orderNumber">
-          <el-input v-model="updateobj.bName"></el-input>
-        </el-form-item>
-        <el-form-item label="网点密码" prop="clientAddress">
-          <el-input v-model="updateobj.bPassword"></el-input>
-        </el-form-item>
-        <el-form-item label="网点电话" prop="clientName">
-          <el-input v-model="updateobj.bPhone"></el-input>
-        </el-form-item>
-        <el-form-item label="网点地址" prop="clientPhone">
-          <el-input v-model="updateobj.bAddress"></el-input>
-        </el-form-item>
-
-        <el-form-item>
-          <el-button type="primary" @click="submitUpdate">确定</el-button>
-          <el-button @click="updateUserDetails = false; updateobj = {}">取消</el-button>
-        </el-form-item>
-      </el-form>
-    </el-dialog>
+   
 
     <pagination
       v-show="total >= 1"
@@ -151,7 +96,7 @@
 </template>
 
 <script>
-import { addBusiness , delBusiness , updateBusiness , getBusiness } from "@/api/table";
+import { addCompany , delCompany  , getCompanys } from "@/api/table";
 import Pagination from "@/components/Pagination"; //
 export default {
   filters: {
@@ -190,14 +135,14 @@ export default {
   methods: {
     fetchData() {
       this.listLoading = true;
-      getBusiness(this.listQuery).then((response) => {
+      getCompanys(this.listQuery).then((response) => {
         this.list = response.data.list;
         this.total = response.data.total;
         this.listLoading = false;
       });
     },
     handleAdd() {
-      addBusiness(this.ruleForm).then((response) => {
+      addCompany(this.ruleForm).then((response) => {
         if (response.code === 200) {
           this.$message.success(response.message);
           this.dialogDetail = false;
@@ -213,17 +158,17 @@ export default {
       this.dialogDetail = false;
     },
     handleDel(id) {
-      this.$confirm("确定删除该用户?", "提示", {
+      this.$confirm("确定删除该快递?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "error",
       })
         .then(() => {
           let data2 = {
-            bId: id,
+            companyId: id,
           };
           console.log(data2);
-          delBusiness(data2).then((res) => {
+          delCompany(data2).then((res) => {
             if (res.code == "200") {
               this.$message.success(res.message);
               this.fetchData();
@@ -231,10 +176,7 @@ export default {
               this.$message.error(res.message);
             }
           });
-          // this.$message({
-          //   type: 'success',
-          //   message: '删除成功!'
-          // });
+         
         })
         .catch(() => {
           this.$message({
@@ -243,18 +185,8 @@ export default {
           });
         });
     },
-    // 点击修改按钮
-    update(bId){
-      this.updateUserDetails = true
-      // getBusiness(this.listQuery).then(res=>{
-      //   this.list=res.data.list;
-      // })
-      getBusiness({"bId":bId}).then(response => {
-        response.data.list[0].bPassword = ''
-        this.updateobj = response.data.list[0]
-        this.updateobj.bId = bId
-      })
-    },
+  
+    
     // 提交修改
     submitUpdate(){
       updateBusiness(this.updateobj).then(response => {

@@ -8,6 +8,14 @@ export function getShopList(data) {
   })
 }
 
+// export function getXX(data){
+//   return request({
+//       url:'/api/order/getShopOrder',
+//       method:'POST',
+//       data
+//   })
+// }
+
 export function addShopList(data) {
   return request({
     url: '/api/order/add',
@@ -123,7 +131,50 @@ export function outputByAdmin(data) {
     data
   })
 }
+///api/statistics/adminGetDataStatistics
+
+export function getTotalData(data) {
+  return request({
+    url: '/api/statistics/adminGetDataStatistics',
+    method: 'post',
+    data
+  })
+}
+// /api/statistics/adminGetDataStatisticsToday
+export function getTodayData(data) {
+  return request({
+    url: '/api/statistics/adminGetDataStatisticsToday',
+    method: 'post',
+    data
+  })
+}
 
 
+/**快递管理
+ * /api/company/addCompany
+ * /api/company/delCompany
+ * // /api/company/getCompanys
+ */
 
+export function getCompanys(data) {
+  return request({
+    url: '/api/company/getCompanys',
+    method: 'post',
+    data
+  })
+}
+export function delCompany(data) {
+  return request({
+    url: '/api/company/delCompany',
+    method: 'post',
+    data
+  })
+}
+export function addCompany(data) {
+  return request({
+    url: '/api/company/addCompany',
+    method: 'post',
+    data
+  })
+}
 

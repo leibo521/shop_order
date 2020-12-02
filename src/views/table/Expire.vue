@@ -2,34 +2,21 @@
   <div class="app-container">
     <el-form :inline="true" :model="listQuery" class="demo-form-inline">
       <el-row>
-        <!-- <el-form-item label="收件人">
+        <el-form-item label="收件人">
           <el-input v-model="listQuery.name" placeholder="收件人"></el-input>
         </el-form-item>
-      -->
+        <el-form-item label="单号">
+          <el-input
+            v-model="listQuery.companyname"
+            placeholder="单号"
+          ></el-input>
+        </el-form-item>
         <el-form-item label="电话">
           <el-input
-            v-model="listQuery.number"
+            v-model="listQuery.companyname"
             placeholder="电话"
           ></el-input>
         </el-form-item>
-        <el-form-item label="类型">
-         <el-select  v-model="listQuery.orderStatus">
-           <el-option value="0" label="快递员数据"></el-option>
-           <el-option value="1" label="普通数据"></el-option>
-         </el-select>
-        </el-form-item>
-        <el-form-item width="200px" label="入库时间">
-            <el-date-picker
-              v-model="value1"
-               type="daterange"
-              range-separator="至"
-              format="yyyy-MM-dd "
-               value-format="yyyy-MM-dd HH:mm:ss"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-            >
-            </el-date-picker>
-          </el-form-item>
         <el-form-item>
           <el-button type="primary" plain @click="fetchData()">查询</el-button>
           <!-- <el-button type="primary"  plain @click="handleAdd()"
@@ -49,11 +36,11 @@
       fit
       highlight-current-row
     >
-      <!-- <el-table-column align="center" label="编号" width="95">
+      <el-table-column align="center" label="编号" width="95">
         <template slot-scope="scope">
           {{ scope.$index + 1 }}
         </template>
-      </el-table-column> -->
+      </el-table-column>
       <el-table-column label="快递单号" align="center">
         <template slot-scope="scope">
           <span
@@ -78,22 +65,15 @@
           {{ scope.row.clientPhone }}
         </template>
       </el-table-column>
-      <!-- <el-table-column label="地址" align="center">
+      <el-table-column label="地址" align="center">
         <template slot-scope="scope">
           {{ scope.row.clientAddress }}
         </template>
-      </el-table-column> -->
+      </el-table-column>
       <el-table-column label="数据状态" align="center">
         <template slot-scope="scope">
-          <!-- {{ scope.row.orderStatus == 1 ? "已经出库" : "" }}
-          {{ scope.row.orderStatus == 0 ? "入库中" : "" }} -->
-           {{ scope.row.orderStatus | orderStatusFilter }}
-        </template>
-      </el-table-column>
-      <el-table-column label="数据类型" align="center">
-        <template slot-scope="scope">
-          {{ scope.row.orderType == 1 ? "快递员数据" : "" }}
-          {{ scope.row.orderType == 0 ? "普通数据" : "" }}
+          {{ scope.row.orderStatus == 1 ? "已经出库" : "" }}
+          {{ scope.row.orderStatus == 0 ? "入库中" : "" }}
         </template>
       </el-table-column>
       <el-table-column label="入库时间" align="center">
@@ -106,9 +86,14 @@
           {{ scope.row.orderExpireTime }}
         </template>
       </el-table-column>
+          <el-table-column label="快件类型" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.orderType | orderTypeFilter }}
+        </template>
+      </el-table-column>
       <el-table-column label="用户状态" align="center">
         <template slot-scope="scope">
-          <span> {{ scope.row.clientStatus | statusFilter }}</span>
+          <span> {{ scope.row.orderStatus | statusFilter }}</span>
         </template>
       </el-table-column>
       <el-table-column label="是否绑定微信" align="center">
@@ -140,7 +125,6 @@
         </template>
       </el-table-column>
     </el-table>
-    
     <el-dialog title="新增入库" :visible.sync="dialogDetail">
       <el-form
         :model="ruleForm"
@@ -218,14 +202,6 @@ export default {
       };
       return statusMap[status];
     },
-    orderStatusFilter(status) {
-      const statusMap = {
-        1: "已经出库",
-        0: "未出库",
-        2:'已过期'
-      };
-      return statusMap[status];
-    },
     wxstatusFilter(status) {
       const statusMap = {
         1: "是",
@@ -238,7 +214,6 @@ export default {
   data() {
     return {
       list: null,
-      value1:null,
       showStore: false,
       listLoading: false,
       total: 0,
@@ -288,11 +263,7 @@ export default {
   methods: {
     fetchData() {
       this.listLoading = true;
-     console.log(this.value1);
-     if(this.value1!=null){
-        this.listQuery.startTime=this.value1[0];
-      this.listQuery.endTime=this.value1[1];
-     }
+
       getShopList(this.listQuery).then((response) => {
         this.list = response.data.list;
         this.total = response.data.total;

@@ -14,8 +14,9 @@
         </el-form-item>
         <el-form-item label="类型">
          <el-select  v-model="listQuery.orderStatus">
-           <el-option value="0" label="快递员数据"></el-option>
-           <el-option value="1" label="普通数据"></el-option>
+           <el-option value="1" label="已经出库"></el-option>
+           <el-option value="0" label="入库中"></el-option>
+           <el-option value="2" label="异常件"></el-option>
          </el-select>
         </el-form-item>
         <el-form-item width="200px" label="入库时间">
@@ -36,9 +37,7 @@
               >新增</el-button> -->
         </el-form-item>
 
-        <el-button style="float:right" type="primary" plain @click="handleAdd"
-          >新增</el-button
-        >
+        <!-- <el-button style="float:right" type="primary" plain @click="handleAdd">新增</el-button> -->
       </el-row>
     </el-form>
     <el-table
@@ -54,12 +53,12 @@
           {{ scope.$index + 1 }}
         </template>
       </el-table-column> -->
-      <el-table-column label="快递单号" align="center">
+      <el-table-column label="快递编号" align="center">
         <template slot-scope="scope">
           <span
             @click="handleDetail(scope.row.id)"
             style="color: #409eff; cursor: pointer"
-            >{{ scope.row.orderNumber }}</span
+            >{{ scope.row.orderCode }}</span
           >
         </template>
       </el-table-column>
@@ -90,7 +89,7 @@
            {{ scope.row.orderStatus | orderStatusFilter }}
         </template>
       </el-table-column>
-      <el-table-column label="数据类型" align="center">
+      <el-table-column label="快件类型" align="center">
         <template slot-scope="scope">
           {{ scope.row.orderType == 1 ? "快递员数据" : "" }}
           {{ scope.row.orderType == 0 ? "普通数据" : "" }}
@@ -222,7 +221,7 @@ export default {
       const statusMap = {
         1: "已经出库",
         0: "未出库",
-        2:'已过期'
+        2:'异常件'
       };
       return statusMap[status];
     },

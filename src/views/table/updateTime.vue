@@ -37,12 +37,12 @@
           {{ scope.$index + 1 }}
         </template>
       </el-table-column> -->
-      <el-table-column label="快递单号" align="center">
+      <el-table-column label="快递遍号" align="center">
         <template slot-scope="scope">
           <span
             @click="handleDetail(scope.row.id)"
             style="color: #409eff; cursor: pointer"
-            >{{ scope.row.orderNumber }}</span
+            >{{ scope.row.orderCode }}</span
           >
         </template>
       </el-table-column>

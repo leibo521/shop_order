@@ -42,11 +42,11 @@
       fit
       highlight-current-row
     >
-      <el-table-column align="center" label="ID" width="95">
+      <!-- <el-table-column align="center" label="ID" width="95">
         <template slot-scope="scope">
           {{ scope.$index + 1 }}
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <!-- <el-table-column label="快递单号" align="center">
         <template slot-scope="scope">
          <span  style="color:#409EFF">{{ scope.row.number }}</span> 
@@ -54,7 +54,7 @@
       </el-table-column> -->
       <el-table-column label="编号" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.ioId }}</span>
+          <span>{{ scope.row.number }}</span>
         </template>
       </el-table-column>
       <el-table-column label="出入库类型" align="center">

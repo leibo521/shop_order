@@ -16,7 +16,7 @@
           <el-select style="margin-left: 20px;" v-model="listQuery.type" placeholder="选择日志类型">
             <el-option label="添加" value="add"></el-option>
             <el-option label="删除" value="delete"></el-option>
-            <el-option label="更新" value="update"></el-option>
+            <!-- <el-option label="更新" value="update"></el-option> -->
             <el-option label="登录" value="login"></el-option>
           </el-select>
 
@@ -81,7 +81,6 @@
           {{ '[' + scope.row.lName + '] ' }}
             {{ scope.row.lType == 'add' ? '添加了编号为 [' + scope.row.lDetails + '] 的面单数据' : '' }}
             {{ scope.row.lType == 'delete' ? '删除了编号为 [' + scope.row.lDetails + '] 的面单数据' : '' }}
-            {{ scope.row.lType == 'update' ? '更新了编号为 [' + scope.row.lDetails + '] 的面单数据' : '' }}
             {{ scope.row.lType == 'login' ? '在 [' + scope.row.updateDate + '] 登录了系统' : '' }}
         </template>
         

@@ -1,9 +1,16 @@
 <template>
   <div class="login-container">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
-
+    <el-form
+      v-if="loginType"
+      ref="loginForm"
+      :model="loginForm"
+      :rules="loginRules"
+      class="login-form"
+      auto-complete="on"
+      label-position="left"
+    >
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <h3 class="title">登陆</h3>
       </div>
 
       <el-form-item prop="userPhone">
@@ -34,85 +41,190 @@
           auto-complete="on"
           @keyup.enter.native="handleLogin"
         />
-      
       </el-form-item>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
-
+      <el-button
+        :loading="loading"
+        type="primary"
+        style=" margin-bottom: 30px;float:right"
+        @click.native.prevent="handleLogin"
+        >登陆</el-button
+      >
+      <el-button
+        :loading="loading"
+        type="primary"
+        style="margin-bottom: 30px; "
+        @click.native.prevent="handlRegister"
+        >注册</el-button
+      >
+    </el-form>
+    <el-form
+      v-else
+      ref="registerForm"
+      :model="registerForm"
+      :rules="rules"
+      class="login-form"
+      auto-complete="on"
+      label-position="left"
+    >
+      <div class="title-container">
+        <h3 class="title">注册</h3>
+      </div>
+      <el-form-item label="用户名" prop="cName">
+        <el-input v-model="registerForm.cName"></el-input>
+      </el-form-item>
+      <el-form-item label="用户手机" prop="cPhone">
+        <el-input v-model="registerForm.cPhone"></el-input>
+      </el-form-item>
+      <el-form-item label="用户密码" prop="cPassword">
+        <el-input type="password" v-model="registerForm.cPassword"></el-input>
+      </el-form-item>
+      <el-form-item label="注册类型">
+        <el-radio-group v-model="registerForm.registerType">
+          <el-radio value="" label="user">用户</el-radio>
+          <el-radio value="" label="business">商家</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-button
+        :loading="loading"
+        type="primary"
+        style="margin-bottom: 30px ;float:right"
+        @click.native.prevent="handlRegister2"
+        >注册</el-button
+      >
+      <el-button
+        :loading="loading"
+        type="primary"
+        style="margin-bottom: 30px;"
+        @click.native.prevent="handleLogin2"
+        >登陆</el-button
+      >
     </el-form>
   </div>
 </template>
 
 <script>
-import { validuserPhone } from '@/utils/validate'
-import{login} from '@/api/user'
+import { validuserPhone } from "@/utils/validate";
+import { login, register } from "@/api/user";
 export default {
-  name: 'Login',
+  name: "Login",
   data() {
     const validateuserPhone = (rule, value, callback) => {
       if (!validuserPhone(value)) {
-        callback(new Error('Please enter the correct user name'))
+        callback(new Error("Please enter the correct user name"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     const validateuserPassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error('The userPassword can not be less than 6 digits'))
+        callback(new Error("The userPassword can not be less than 6 digits"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     return {
       loginForm: {
-        userPhone: 'admin',
-        userPassword: '159263',
-        userType:'admin'
+        userPhone: "admin",
+        userPassword: "159263",
+        userType: "admin",
       },
       loginRules: {
-        userPhone: [{ required: true, trigger: 'blur', message: '请输入用户名', }],
-        userPassword: [{ required: true, trigger: 'blur', message: '请输入密码',}]
+        userPhone: [
+          { required: true, trigger: "blur", message: "请输入用户名" },
+        ],
+        userPassword: [
+          { required: true, trigger: "blur", message: "请输入密码" },
+        ],
+      },
+      rules: {
+        cName: [{ required: true, message: "请输入用户名", trigger: "blur" }],
+        cPhone: [{ required: true, message: "请输入手机号", trigger: "blur" }],
+        cPassword: [
+          { required: true, message: "密码不能为空", trigger: "blur" },
+          { min: 3, max: 6, message: "长度在 3 到 6 个字符", trigger: "blur" },
+        ],
       },
       loading: false,
-      userPasswordType: 'userPassword',
-      redirect: undefined
-    }
+      loginType: true,
+      registerForm: {
+        cPassword: "",
+        cPhone: "",
+        registerType: "user",
+        cName: "",
+      },
+
+      userPasswordType: "userPassword",
+      redirect: undefined,
+    };
   },
   watch: {
     $route: {
-      handler: function(route) {
-        this.redirect = route.query && route.query.redirect
+      handler: function (route) {
+        this.redirect = route.query && route.query.redirect;
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   methods: {
     showuserPassword() {
-      if (this.userPasswordType === 'userPassword') {
-        this.userPasswordType = ''
+      if (this.userPasswordType === "userPassword") {
+        this.userPasswordType = "";
       } else {
-        this.userPasswordType = 'userPassword'
+        this.userPasswordType = "userPassword";
       }
       this.$nextTick(() => {
-        this.$refs.userPassword.focus()
-      })
+        this.$refs.userPassword.focus();
+      });
+    },
+    handlRegister() {
+      this.loginType = false;
+      this.$refs.registerForm.resetFields();
+       this.$refs.loginForm.resetFields();
+    },
+    handleLogin2() {
+      this.loginType = true;
+       this.$refs.registerForm.resetFields();
+        this.$refs.loginForm.resetFields();
+    },
+    handlRegister2() {
+      this.$refs.registerForm.validate((valid) => {
+        if (valid) {
+          register(this.registerForm).then((res) => {
+            if (res.code == "200") {
+              this.$message.success("注册成功");
+              this.loading = false;
+            } else {
+              this.$message.error(res.message);
+              this.loading = false;
+            }
+          })
+           .catch(() => {
+              this.loading = false;
+            });
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
     },
     handleLogin() {
-      this.$refs.loginForm.validate(valid => {
+      this.loginType = true;
+      this.$refs.loginForm.validate((valid) => {
         if (valid) {
-          this.loading = true
-           sessionStorage.setItem('username',this.loginForm.userPhone)
-          login(this.loginForm).then(res=>{
-         
-            if(res.code==200){
-              sessionStorage.setItem('token',res.data.access_token);
-             this.$router.push({ path:'/institutions' })
+          this.loading = true;
+          sessionStorage.setItem("username", this.loginForm.userPhone);
+          login(this.loginForm)
+            .then((res) => {
+              if (res.code == 200) {
+                sessionStorage.setItem("token", res.data.access_token);
+                this.$router.push({ path: "/institutions" });
+                this.loading = false;
+              }
+            })
+            .catch(() => {
               this.loading = false;
-              
-            }
-          }).catch(() => {
-            this.loading = false
-          })
+            });
           // this.$store.dispatch('user/login', this.loginForm).then(() => {
           //   this.$router.push({ path: this.redirect || '/' })
           //   this.loading = false
@@ -120,21 +232,21 @@ export default {
           //   this.loading = false
           // })
         } else {
-          console.log('error submit!!')
-          return false
+          console.log("error submit!!");
+          return false;
         }
-      })
-    }
-  }
-}
+      });
+    },
+  },
+};
 </script>
 
 <style lang="scss">
 /* 修复input 背景不协调 和光标变色 */
 /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
 
-$bg:#283443;
-$light_gray:#fff;
+$bg: #283443;
+$light_gray: #fff;
 $cursor: #fff;
 
 @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
@@ -142,13 +254,17 @@ $cursor: #fff;
     color: $cursor;
   }
 }
-
+.el-form-item {
+  padding-left: 10px;
+}
+.el-form-item__label {
+  color: #fff;
+}
 /* reset element-ui css */
 .login-container {
   .el-input {
     display: inline-block;
     height: 47px;
-    width: 85%;
 
     input {
       background: transparent;
@@ -177,9 +293,9 @@ $cursor: #fff;
 </style>
 
 <style lang="scss" scoped>
-$bg:#2d3a4b;
-$dark_gray:#889aa4;
-$light_gray:#eee;
+$bg: #2d3a4b;
+$dark_gray: #889aa4;
+$light_gray: #eee;
 
 .login-container {
   min-height: 100%;

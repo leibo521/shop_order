@@ -1,5 +1,6 @@
 <template>
   <div class="app-container">
+
     <div class="bg_purple">
     <el-form :inline="true" :model="listQuery" class="demo-form-inline">
       <el-row :gutter="30">
@@ -55,8 +56,12 @@
          
         </el-col>
       </el-row>
+
       </div>
-       <div class="bg_purple">
+
+
+    <div class="bg_purple">
+
     <el-form :inline="true" :model="listQuery" class="demo-form-inline">
       <el-row :gutter="30">
         <el-col :span='6'>
@@ -122,6 +127,8 @@
             </div>
         </el-col>
       </el-row>
+
+
     </div>
   </div>
 </template>
@@ -134,7 +141,7 @@ export default {
   data() {
     return {
       list: null,
-outlv:'0%',
+      outlv:'0%',
       value1: null,
       listQuery: {
         startDate: "",
@@ -172,12 +179,12 @@ outlv:'0%',
         this.list = res.data;
       });
       getTodayData(this.listQuery2).then(res=>{
+        console.log(res)
         this.list2=res.data;
-        let lv=(Math.round(this.list2.output / this.list2.inputData * 10000) / 1000.00)+"%";
-        if(lv=='NaN%'){
+        if(res.data.inputData === 0) {
           this.outlv = '0%'
         }else{
-          this.outlv=lv
+          this.outlv = Math.round((res.data.output / res.data.inputData) * 100) + "%"
         }
       })
        

@@ -26,7 +26,6 @@
           <svg-icon icon-class="userPassword" />
         </span>
         <el-input
-         
           v-model="loginForm.userPassword"
           type="password"
           placeholder="userPassword"
@@ -39,8 +38,6 @@
       </el-form-item>
 
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
-
-     
 
     </el-form>
   </div>

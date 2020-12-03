@@ -37,9 +37,22 @@ export const constantRoutes = [
         name: 'stores',
         component: () => import('@/views/table/total'),
         meta: { title: '数据统计', icon: 'table' }
-      },
- 
-  
+      }  
+    ]
+  },
+  {
+    path: '/authority',
+    component: Layout,
+    redirect: '/authority/authindex',
+    name: 'authority',
+    meta: { title: '权限管理', icon: 'el-icon-s-help' },
+    children: [
+      {
+        path: 'authindex',
+        name: 'authindex',
+        component: () => import('@/views/table/authority'),
+        meta: { title: '权限管理', icon: 'table' }
+      }  
     ]
   },
   {

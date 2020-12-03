@@ -178,3 +178,29 @@ export function addCompany(data) {
   })
 }
 
+// 权限相关的操作 /api/authority/getAuthoritys
+export function getAuthoritys(data) {
+  return request({
+    url: '/api/authority/getAuthoritys',
+    method: 'post',
+    data
+  })
+}
+
+// 增加权限的
+export function addAuthoritys(data) {
+  return request({
+    url: '/api/authority/addAuthority',
+    method: 'post',
+    data
+  })
+}
+
+// 删除权限的接口
+export function delAuthoritys(data) {
+  return request({
+    url: '/api/authority/delAuthority',
+    method: 'post',
+    data
+  })
+}

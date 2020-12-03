@@ -6,15 +6,12 @@
         <el-form-item width="200px" label="快递公司">
             <el-input v-model="listQuery.companyName" placeholder="快递公司"></el-input>
           </el-form-item>
-
-          
             <el-button type="primary" plain @click="fetchData"
               >查询</el-button
             >
             <el-button type="primary" style="float:right" plain @click="dialogDetail = true"
               >新增</el-button
             >
-          
         </el-col>
       </el-row>
     </el-form>
@@ -27,11 +24,6 @@
       fit
       highlight-current-row
     >
-      <el-table-column align="center" label="编号" >
-        <template slot-scope="scope">
-          {{ scope.row.companyId }}
-        </template>
-      </el-table-column>
 
       <el-table-column label="快递公司" align="center">
         <template slot-scope="scope">
@@ -43,14 +35,8 @@
         </template>
       </el-table-column>
 
-
-    
-
-
-
       <el-table-column label="操作"  align="center">
         <template slot-scope="scope">
-         
 
           <el-button
             @click="handleDel(scope.row.companyId)"
@@ -82,8 +68,6 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-
-   
 
     <pagination
       v-show="total >= 1"

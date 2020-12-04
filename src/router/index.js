@@ -54,65 +54,47 @@ export const constantRoutes = [
         component: () => import('@/views/table/index'),
         meta: { title: '数据管理', icon: 'table' }
       },
-    ]
-  },
-
-  {
-    path: '/update',
-    component: Layout,
-    redirect: '/update/index',
-    name: 'update',
-    meta: { title: '超时限', icon: 'el-icon-s-help' },
-    children: [
       {
-        path: 'index',
+        path: '/updateTime',
         name: 'updateIndex',
         component: () => import('@/views/table/updateTime'),
-        meta: { title: '超时限', icon: 'table' }
+        meta: { title: '超时数据', icon: 'table' }
       },
+      {
+        path: '/Stock',
+        name: 'isStock',
+        component: () => import('@/views/table/isStock'),
+        meta: { title: '库存数据', icon: 'table' }
+      },
+      {
+        path: '/output',
+        name: 'updateIndex',
+        component: () => import('@/views/table/outputData'),
+        meta: { title: '出库数据', icon: 'table' }
+      },
+      {
+        path: '/yichang',
+        name: 'updateIndex',
+        component: () => import('@/views/table/isException'),
+        meta: { title: '异常数据', icon: 'table' }
+      },
+   
     ]
   },
 
-
-  {
-    path: '/net',
-    component: Layout,
-    redirect: '/net/index',
-    name: 'netIndex',
-    meta: { title: '网点管理', icon: 'el-icon-s-help' },
-    children: [
-      {
-        path: 'index',
-        name: 'netMange',
-        component: () => import('@/views/table/business'),
-        meta: { title: '网点管理', icon: 'table' }
-      }
   
-    ]
-  },
 
-  {
-    path: '/user',
-    component: Layout,
-    redirect: '/user/index',
-    name: 'institutions',
-    meta: { title: '用户管理', icon: 'el-icon-s-help' },
-    children: [
-      {
-        path: 'index',
-        name: 'userIndex',
-        component: () => import('@/views/table/costumers'),
-        meta: { title: '用户管理', icon: 'table' }
-      },
-    ]
-  },
+
+  
+
+
 
   {
     path: '/company',
     component: Layout,
     redirect: '/company/index',
     name: 'company',
-    meta: { title: '快递管理', icon: 'el-icon-s-help' },
+    meta: { title: '系统管理', icon: 'el-icon-s-help' },
     children: [
       {
         path: 'index',
@@ -120,19 +102,20 @@ export const constantRoutes = [
         component: () => import('@/views/company/index'),
         meta: { title: '快递管理', icon: 'table' }
       },
-    ]
-  },
-
-
-  {
-    path: '/authority',
-    component: Layout,
-    redirect: '/authority/authindex',
-    name: 'authority',
-    meta: { title: '权限管理', icon: 'el-icon-s-help' },
-    children: [
       {
-        path: 'authindex',
+        path: '/user',
+        name: 'userIndex',
+        component: () => import('@/views/table/costumers'),
+        meta: { title: '用户管理', icon: 'table' }
+      },
+      {
+        path: '/net',
+        name: 'netMange',
+        component: () => import('@/views/table/business'),
+        meta: { title: '网点管理', icon: 'table' }
+      },
+      {
+        path: '/authindex',
         name: 'authindex',
         component: () => import('@/views/table/authority'),
         meta: { title: '权限管理', icon: 'table' }
@@ -141,42 +124,25 @@ export const constantRoutes = [
   },
 
 
-
-
-
-  {
-    path: '/out',
-    component: Layout,
-    redirect: '/out/index',
-    name: 'institutions',
-    meta: { title: '出入库日志', icon: 'el-icon-s-help' },
-    children: [
-      {
-        path: 'index',
-        name: 'outIndex',
-        component: () => import('@/views/table/clues'),
-        meta: { title: '出入库日志', icon: 'table' }
-      },
- 
-  
-    ]
-  },
-
-
-
   {
     path: '/logg',
     component: Layout,
     redirect: '/logg/index',
     name: 'loogIndex',
-    meta: { title: '操作日志管理', icon: 'el-icon-s-help' },
+    meta: { title: '日志管理', icon: 'el-icon-s-help' },
     children: [
       {
         path: 'index',
         name: 'logIndex',
         component: () => import('@/views/table/logger'),
         meta: { title: '操作日志管理', icon: 'table' }
-      }
+      },
+      {
+        path: '/out',
+        name: 'outIndex',
+        component: () => import('@/views/table/clues'),
+        meta: { title: '出入库日志', icon: 'table' }
+      },
     ]
   },
  

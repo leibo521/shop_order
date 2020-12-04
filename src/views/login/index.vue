@@ -46,14 +46,14 @@
       <el-button
         :loading="loading"
         type="primary"
-        style=" margin-bottom: 30px;float:right"
+        style="margin-bottom: 30px; float: right"
         @click.native.prevent="handleLogin"
         >登陆</el-button
       >
       <el-button
         :loading="loading"
         type="primary"
-        style="margin-bottom: 30px; "
+        style="margin-bottom: 30px"
         @click.native.prevent="handlRegister"
         >注册</el-button
       >
@@ -79,23 +79,25 @@
       <el-form-item label="用户密码" prop="cPassword">
         <el-input type="password" v-model="registerForm.cPassword"></el-input>
       </el-form-item>
+      <el-form-item label="网点地址" prop="cAddress">
+        <el-input v-model="registerForm.cAddress"></el-input>
+      </el-form-item>
       <el-form-item label="注册类型">
         <el-radio-group v-model="registerForm.registerType">
-          <el-radio value="" label="user">用户</el-radio>
           <el-radio value="" label="business">商家</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-button
         :loading="loading"
         type="primary"
-        style="margin-bottom: 30px ;float:right"
+        style="margin-bottom: 30px; float: right"
         @click.native.prevent="handlRegister2"
         >注册</el-button
       >
       <el-button
         :loading="loading"
         type="primary"
-        style="margin-bottom: 30px;"
+        style="margin-bottom: 30px"
         @click.native.prevent="handleLogin2"
         >登陆</el-button
       >
@@ -142,7 +144,11 @@ export default {
         cPhone: [{ required: true, message: "请输入手机号", trigger: "blur" }],
         cPassword: [
           { required: true, message: "密码不能为空", trigger: "blur" },
-          { min: 3, max: 6, message: "长度在 3 到 6 个字符", trigger: "blur" },
+          { min: 3, max: 16, message: "长度在 3 到 16 个字符", trigger: "blur" },
+        ],
+        cAddress: [
+          { required: true, message: "商家地址不能为空", trigger: "blur" },
+          { min: 3, max: 50, message: "长度在 5 到 50 个字符", trigger: "blur" },
         ],
       },
       loading: false,
@@ -150,10 +156,10 @@ export default {
       registerForm: {
         cPassword: "",
         cPhone: "",
-        registerType: "user",
+        registerType: "business",
+        cAddress: "",
         cName: "",
       },
-
       userPasswordType: "userPassword",
       redirect: undefined,
     };
@@ -180,26 +186,27 @@ export default {
     handlRegister() {
       this.loginType = false;
       this.$refs.registerForm.resetFields();
-       this.$refs.loginForm.resetFields();
+      this.$refs.loginForm.resetFields();
     },
     handleLogin2() {
       this.loginType = true;
-       this.$refs.registerForm.resetFields();
-        this.$refs.loginForm.resetFields();
+      this.$refs.registerForm.resetFields();
+      this.$refs.loginForm.resetFields();
     },
     handlRegister2() {
       this.$refs.registerForm.validate((valid) => {
         if (valid) {
-          register(this.registerForm).then((res) => {
-            if (res.code == "200") {
-              this.$message.success("注册成功");
-              this.loading = false;
-            } else {
-              this.$message.error(res.message);
-              this.loading = false;
-            }
-          })
-           .catch(() => {
+          register(this.registerForm)
+            .then((res) => {
+              if (res.code == "200") {
+                this.$message.success("注册成功");
+                this.loading = false;
+              } else {
+                this.$message.error(res.message);
+                this.loading = false;
+              }
+            })
+            .catch(() => {
               this.loading = false;
             });
         } else {

@@ -9,6 +9,7 @@
         <el-form-item label="电话">
           <el-input v-model="listQuery.number" placeholder="电话"></el-input>
         </el-form-item>
+
         <el-form-item label="类型">
           <el-select v-model="listQuery.orderStatus">
             <el-option value="1" label="已经出库"></el-option>
@@ -16,6 +17,7 @@
             <el-option value="2" label="异常件"></el-option>
           </el-select>
         </el-form-item>
+
         <el-form-item width="200px" label="入库时间">
           <el-date-picker
             v-model="value1"
@@ -184,13 +186,67 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-    <el-dialog title="数据详情" :visible.sync="dialogDetailImg">
-      
+
+
+    <el-dialog @close="detailsClose" title="数据详情(点击可放大)" :visible.sync="dialogDetailImg">
+      <div class="coverImages">
+        <div class="wrap">
+          <div style="padding: 7px 50px; text-align: center; color: black">
+            入库照片
+          </div>
+          <el-image
+            :src="images.orderInputPhoto"
+            fit="contain"
+            style="width: 200px; height: 200px"
+            :preview-src-list="srcList"
+          >
+            <div slot="error" style=" text-align:center; padding: 50px;" class="image-slot">
+              图片暂无
+            </div>
+          </el-image>
+        </div>
+
+        <div class="wrap">
+          <div style="padding: 7px 50px; text-align: center; color: black">
+            出库照片
+          </div>
+          <el-image
+            :src="images.orderOutputPhoto"
+            fit="contain"
+            style="width: 200px; height: 200px"
+            :preview-src-list="srcList"
+          >
+            <div slot="error" style=" text-align:center; padding: 50px;" class="image-slot">
+              图片暂无
+            </div>
+          </el-image>
+        </div>
+
+        <div class="wrap">
+          <div style="padding: 7px 50px; text-align: center; color: black">
+            异常照片
+          </div>
+          <el-image
+            :src="images.orderExceptionPhoto"
+            fit="contain"
+            style="width: 200px; height: 200px"
+            :preview-src-list="srcList"
+          >
+            <div slot="error" style=" text-align:center; padding: 50px;" class="image-slot">
+              图片暂无
+            </div>
+          </el-image>
+        </div>
+      </div>
+
+      <div>
         <el-button type="primary" @click="dialogDetailImg = false"
           >确定</el-button
         >
-    
+      </div>
     </el-dialog>
+
+    
     <pagination
       v-show="total >= 1"
       :total="total"
@@ -283,6 +339,12 @@ export default {
       time: "",
       form: {},
       storeInfo: {},
+      images: {
+        orderInputPhoto: "",
+        orderOutputPhoto: "",
+        orderExceptionPhoto: ''
+      },
+      srcList: [],
     };
   },
   created() {
@@ -324,8 +386,20 @@ export default {
       this.listQuery.orderNumber = id;
       this.dialogDetailImg = true;
       getShopList(this.listQuery).then((res) => {
-        console.log(res);
-        this.listQuery.orderNumber =''
+        let json = JSON.parse(res.data.list[0].orderDetails);
+        if (json.orderInputPhoto != "") {
+          this.images.orderInputPhoto = json.orderInputPhoto
+          this.srcList.push(json.orderInputPhoto);
+        }
+        if (json.orderOutputPhoto != "") {
+          this.images.orderOutputPhoto = json.orderOutputPhoto
+          this.srcList.push(json.orderOutputPhoto);
+        }
+        if (json.orderExceptionPhoto != "") {
+          this.orderExceptionPhoto = json.orderExceptionPhoto
+          this.srcList.push(json.orderExceptionPhoto);
+        }
+        this.listQuery.orderNumber = "";
       });
     },
     handleDel(id) {
@@ -382,6 +456,11 @@ export default {
           });
         });
     },
+    detailsClose(){
+      this.images = {}
+      this.srcList = []
+
+    }
   },
 };
 </script>
@@ -406,5 +485,15 @@ export default {
 }
 .add-form .el-input {
   width: 50%;
+}
+.coverImages {
+  padding: 20px;
+}
+.coverImages > .wrap {
+  padding: 10px;
+  display: inline-block;
+}
+.image-slot{
+  text-align: center;;
 }
 </style>

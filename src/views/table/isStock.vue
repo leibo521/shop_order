@@ -7,12 +7,9 @@
         </el-form-item>
       -->
         <el-form-item label="电话">
-          <el-input
-            v-model="listQuery.number"
-            placeholder="电话"
-          ></el-input>
+          <el-input v-model="listQuery.number" placeholder="电话"></el-input>
         </el-form-item>
-     
+
         <!-- <el-form-item width="200px" label="入库时间">
             <el-date-picker
               v-model="value1"
@@ -50,7 +47,7 @@
       <el-table-column label="快递编号" align="center">
         <template slot-scope="scope">
           <span
-            @click="handleDetail(scope.row.id)"
+            @click="handleDetail(scope.row.orderNumber)"
             style="color: #409eff; cursor: pointer"
             >{{ scope.row.orderCode }}</span
           >
@@ -80,7 +77,7 @@
         <template slot-scope="scope">
           <!-- {{ scope.row.orderStatus == 1 ? "已经出库" : "" }}
           {{ scope.row.orderStatus == 0 ? "入库中" : "" }} -->
-           {{ scope.row.orderStatus | orderStatusFilter }}
+          {{ scope.row.orderStatus | orderStatusFilter }}
         </template>
       </el-table-column>
       <el-table-column label="快件类型" align="center">
@@ -133,8 +130,80 @@
         </template>
       </el-table-column> -->
     </el-table>
-    
-    
+
+    <el-dialog
+      @close="detailsClose"
+      title="数据详情(点击可放大)"
+      :visible.sync="dialogDetailImg"
+    >
+      <div class="coverImages">
+        <div class="wrap">
+          <div style="padding: 7px 50px; text-align: center; color: black">
+            入库照片
+          </div>
+          <el-image
+            :src="images.orderInputPhoto"
+            fit="contain"
+            style="width: 200px; height: 200px"
+            :preview-src-list="srcList"
+          >
+            <div
+              slot="error"
+              style="text-align: center; padding: 50px"
+              class="image-slot"
+            >
+              图片暂无
+            </div>
+          </el-image>
+        </div>
+
+        <div class="wrap">
+          <div style="padding: 7px 50px; text-align: center; color: black">
+            出库照片
+          </div>
+          <el-image
+            :src="images.orderOutputPhoto"
+            fit="contain"
+            style="width: 200px; height: 200px"
+            :preview-src-list="srcList"
+          >
+            <div
+              slot="error"
+              style="text-align: center; padding: 50px"
+              class="image-slot"
+            >
+              图片暂无
+            </div>
+          </el-image>
+        </div>
+
+        <div class="wrap">
+          <div style="padding: 7px 50px; text-align: center; color: black">
+            异常照片
+          </div>
+          <el-image
+            :src="images.orderExceptionPhoto"
+            fit="contain"
+            style="width: 200px; height: 200px"
+            :preview-src-list="srcList"
+          >
+            <div
+              slot="error"
+              style="text-align: center; padding: 50px"
+              class="image-slot"
+            >
+              图片暂无
+            </div>
+          </el-image>
+        </div>
+      </div>
+
+      <div>
+        <el-button type="primary" @click="dialogDetailImg = false"
+          >确定</el-button
+        >
+      </div>
+    </el-dialog>
 
     <pagination
       v-show="total >= 1"
@@ -169,7 +238,7 @@ export default {
       const statusMap = {
         1: "已经出库",
         0: "未出库",
-        2:'异常件'
+        2: "异常件",
       };
       return statusMap[status];
     },
@@ -184,8 +253,9 @@ export default {
   components: { Pagination },
   data() {
     return {
+      dialogDetailImg: false,
       list: null,
-      value1:null,
+      value1: null,
       showStore: false,
       listLoading: false,
       total: 0,
@@ -223,24 +293,54 @@ export default {
       listQuery: {
         pageNum: 1,
         pageSize: 10,
-        isStock:true,
+        isStock: true,
       },
       time: "",
       form: {},
       storeInfo: {},
+      images: {
+        orderInputPhoto: "",
+        orderOutputPhoto: "",
+        orderExceptionPhoto: "",
+      },
+      srcList: [],
     };
   },
   created() {
     this.fetchData();
   },
   methods: {
+    detailsClose() {
+      this.images = {};
+      this.srcList = [];
+    },
+    handleDetail(id) {
+      this.listQuery.orderNumber = id;
+      this.dialogDetailImg = true;
+      getShopList(this.listQuery).then((res) => {
+        let json = JSON.parse(res.data.list[0].orderDetails);
+        if (json.orderInputPhoto != "") {
+          this.images.orderInputPhoto = json.orderInputPhoto;
+          this.srcList.push(json.orderInputPhoto);
+        }
+        if (json.orderOutputPhoto != "") {
+          this.images.orderOutputPhoto = json.orderOutputPhoto;
+          this.srcList.push(json.orderOutputPhoto);
+        }
+        if (json.orderExceptionPhoto != "") {
+          this.orderExceptionPhoto = json.orderExceptionPhoto;
+          this.srcList.push(json.orderExceptionPhoto);
+        }
+        this.listQuery.orderNumber = "";
+      });
+    },
     fetchData() {
       this.listLoading = true;
-     console.log(this.value1);
-     if(this.value1!=null){
-        this.listQuery.startTime=this.value1[0];
-      this.listQuery.endTime=this.value1[1];
-     }
+      console.log(this.value1);
+      if (this.value1 != null) {
+        this.listQuery.startTime = this.value1[0];
+        this.listQuery.endTime = this.value1[1];
+      }
       getShopList(this.listQuery).then((response) => {
         this.list = response.data.list;
         this.total = response.data.total;
@@ -343,5 +443,15 @@ export default {
 }
 .add-form .el-input {
   width: 50%;
+}
+.coverImages {
+  padding: 20px;
+}
+.coverImages > .wrap {
+  padding: 10px;
+  display: inline-block;
+}
+.image-slot {
+  text-align: center;
 }
 </style>

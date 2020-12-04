@@ -84,7 +84,7 @@
       </el-form-item>
       <el-form-item label="注册类型">
         <el-radio-group v-model="registerForm.registerType">
-          <el-radio value="" label="business">商家</el-radio>
+          <el-radio value="" label="business">网点</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-button

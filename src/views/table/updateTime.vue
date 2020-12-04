@@ -24,7 +24,7 @@
         </el-form-item>
       </el-row>
     </el-form>
-     <el-table
+    <el-table
       v-loading="listLoading"
       :data="list"
       element-loading-text="Loading"
@@ -40,13 +40,13 @@
       <el-table-column label="快递遍号" align="center">
         <template slot-scope="scope">
           <span
-            @click="handleDetail(scope.row.id)"
+            @click="handleDetail(scope.row.orderNumber)"
             style="color: #409eff; cursor: pointer"
             >{{ scope.row.orderCode }}</span
           >
         </template>
       </el-table-column>
-    
+
       <el-table-column label="姓名" align="center">
         <template slot-scope="scope">
           {{ scope.row.clientName }}
@@ -57,7 +57,7 @@
           {{ scope.row.clientPhone }}
         </template>
       </el-table-column>
- 
+
       <el-table-column label="入库时间" align="center">
         <template slot-scope="scope">
           {{ scope.row.orderCreateDate }}
@@ -68,7 +68,7 @@
           {{ scope.row.orderExpireTime }}
         </template>
       </el-table-column>
-          <el-table-column label="快件类型" align="center">
+      <el-table-column label="快件类型" align="center">
         <template slot-scope="scope">
           {{ scope.row.orderType | orderTypeFilter }}
         </template>
@@ -78,7 +78,7 @@
           <span> {{ scope.row.orderStatus | statusFilter }}</span>
         </template>
       </el-table-column>
-     
+
       <el-table-column label="操作" width="280" align="center">
         <template slot-scope="scope">
           <el-button
@@ -104,6 +104,80 @@
       </el-table-column>
     </el-table>
 
+    <el-dialog
+      @close="detailsClose"
+      title="数据详情(点击可放大)"
+      :visible.sync="dialogDetailImg"
+    >
+      <div class="coverImages">
+        <div class="wrap">
+          <div style="padding: 7px 50px; text-align: center; color: black">
+            入库照片
+          </div>
+          <el-image
+            :src="images.orderInputPhoto"
+            fit="contain"
+            style="width: 200px; height: 200px"
+            :preview-src-list="srcList"
+          >
+            <div
+              slot="error"
+              style="text-align: center; padding: 50px"
+              class="image-slot"
+            >
+              图片暂无
+            </div>
+          </el-image>
+        </div>
+
+        <div class="wrap">
+          <div style="padding: 7px 50px; text-align: center; color: black">
+            出库照片
+          </div>
+          <el-image
+            :src="images.orderOutputPhoto"
+            fit="contain"
+            style="width: 200px; height: 200px"
+            :preview-src-list="srcList"
+          >
+            <div
+              slot="error"
+              style="text-align: center; padding: 50px"
+              class="image-slot"
+            >
+              图片暂无
+            </div>
+          </el-image>
+        </div>
+
+        <div class="wrap">
+          <div style="padding: 7px 50px; text-align: center; color: black">
+            异常照片
+          </div>
+          <el-image
+            :src="images.orderExceptionPhoto"
+            fit="contain"
+            style="width: 200px; height: 200px"
+            :preview-src-list="srcList"
+          >
+            <div
+              slot="error"
+              style="text-align: center; padding: 50px"
+              class="image-slot"
+            >
+              图片暂无
+            </div>
+          </el-image>
+        </div>
+      </div>
+
+      <div>
+        <el-button type="primary" @click="dialogDetailImg = false"
+          >确定</el-button
+        >
+      </div>
+    </el-dialog>
+
     <pagination
       v-show="total >= 1"
       :total="total"
@@ -118,7 +192,7 @@
 import { getShopList } from "@/api/table";
 import Pagination from "@/components/Pagination"; //
 export default {
-filters: {
+  filters: {
     statusFilter(status) {
       const statusMap = {
         1: "信任用户",
@@ -137,7 +211,7 @@ filters: {
       const statusMap = {
         1: "已经出库",
         0: "未出库",
-        2:'已过期'
+        2: "已过期",
       };
       return statusMap[status];
     },
@@ -152,21 +226,52 @@ filters: {
   components: { Pagination },
   data() {
     return {
+      dialogDetailImg: false,
       list: null,
       listLoading: false,
       total: 0,
 
       listQuery: {
         pageNum: 1,
-        isExpire:true,
+        isExpire: true,
         pageSize: 10,
       },
+      images: {
+        orderInputPhoto: "",
+        orderOutputPhoto: "",
+        orderExceptionPhoto: "",
+      },
+      srcList: [],
     };
   },
   created() {
     this.fetchData();
   },
   methods: {
+    detailsClose() {
+      this.images = {};
+      this.srcList = [];
+    },
+    handleDetail(id) {
+      this.listQuery.orderNumber = id;
+      this.dialogDetailImg = true;
+      getShopList(this.listQuery).then((res) => {
+        let json = JSON.parse(res.data.list[0].orderDetails);
+        if (json.orderInputPhoto != "") {
+          this.images.orderInputPhoto = json.orderInputPhoto;
+          this.srcList.push(json.orderInputPhoto);
+        }
+        if (json.orderOutputPhoto != "") {
+          this.images.orderOutputPhoto = json.orderOutputPhoto;
+          this.srcList.push(json.orderOutputPhoto);
+        }
+        if (json.orderExceptionPhoto != "") {
+          this.orderExceptionPhoto = json.orderExceptionPhoto;
+          this.srcList.push(json.orderExceptionPhoto);
+        }
+        this.listQuery.orderNumber = "";
+      });
+    },
     fetchData() {
       this.listLoading = true;
       getShopList(this.listQuery).then((response) => {
@@ -186,5 +291,15 @@ filters: {
 // }
 .el-form-item__content span {
   color: #409eff;
+}
+.coverImages {
+  padding: 20px;
+}
+.coverImages > .wrap {
+  padding: 10px;
+  display: inline-block;
+}
+.image-slot {
+  text-align: center;
 }
 </style>

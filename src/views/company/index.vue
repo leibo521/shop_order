@@ -80,7 +80,7 @@
 </template>
 
 <script>
-import { addCompany , delCompany  , getCompanys } from "@/api/table";
+import { addCompany , delCompany, getCompanys } from "@/api/table";
 import Pagination from "@/components/Pagination"; //
 export default {
   filters: {

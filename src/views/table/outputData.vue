@@ -2,32 +2,29 @@
   <div class="app-container">
     <el-form :inline="true" :model="listQuery" class="demo-form-inline">
       <el-row>
-        <el-form-item label="编号">
-          <el-input v-model="listQuery.orderCode" placeholder="编号"></el-input>
+        <!-- <el-form-item label="收件人">
+          <el-input v-model="listQuery.name" placeholder="收件人"></el-input>
         </el-form-item>
-
+      -->
         <el-form-item label="电话">
-          <el-input v-model="listQuery.number" placeholder="电话"></el-input>
+          <el-input
+            v-model="listQuery.number"
+            placeholder="电话"
+          ></el-input>
         </el-form-item>
-        <el-form-item label="类型">
-          <el-select v-model="listQuery.orderStatus">
-            <el-option value="1" label="已经出库"></el-option>
-            <el-option value="0" label="入库中"></el-option>
-            <el-option value="2" label="异常件"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item width="200px" label="入库时间">
-          <el-date-picker
-            v-model="value1"
-            type="daterange"
-            range-separator="至"
-            format="yyyy-MM-dd "
-            value-format="yyyy-MM-dd HH:mm:ss"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-          >
-          </el-date-picker>
-        </el-form-item>
+     
+        <!-- <el-form-item width="200px" label="入库时间">
+            <el-date-picker
+              v-model="value1"
+               type="daterange"
+              range-separator="至"
+              format="yyyy-MM-dd "
+               value-format="yyyy-MM-dd HH:mm:ss"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+            >
+            </el-date-picker>
+          </el-form-item> -->
         <el-form-item>
           <el-button type="primary" plain @click="fetchData()">查询</el-button>
           <!-- <el-button type="primary"  plain @click="handleAdd()"
@@ -53,7 +50,7 @@
       <el-table-column label="快递编号" align="center">
         <template slot-scope="scope">
           <span
-            @click="handleDetail(scope.row.orderNumber)"
+            @click="handleDetail(scope.row.id)"
             style="color: #409eff; cursor: pointer"
             >{{ scope.row.orderCode }}</span
           >
@@ -83,7 +80,7 @@
         <template slot-scope="scope">
           <!-- {{ scope.row.orderStatus == 1 ? "已经出库" : "" }}
           {{ scope.row.orderStatus == 0 ? "入库中" : "" }} -->
-          {{ scope.row.orderStatus | orderStatusFilter }}
+           {{ scope.row.orderStatus | orderStatusFilter }}
         </template>
       </el-table-column>
       <el-table-column label="快件类型" align="center">
@@ -92,7 +89,7 @@
           {{ scope.row.orderType == 0 ? "普通数据" : "" }}
         </template>
       </el-table-column>
-      <el-table-column label="入库时间" align="center">
+      <!-- <el-table-column label="入库时间" align="center">
         <template slot-scope="scope">
           {{ scope.row.orderCreateDate }}
         </template>
@@ -101,7 +98,7 @@
         <template slot-scope="scope">
           {{ scope.row.orderExpireTime }}
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="用户状态" align="center">
         <template slot-scope="scope">
           <span> {{ scope.row.clientStatus | statusFilter }}</span>
@@ -112,7 +109,7 @@
           <span> {{ scope.row.clientIsWechat | wxstatusFilter }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="280" align="center">
+      <!-- <el-table-column label="操作" width="280" align="center">
         <template slot-scope="scope">
           <el-button
             @click="handleOut(scope.row.orderId)"
@@ -134,63 +131,11 @@
             >删除</el-button
           >
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
-
-    <el-dialog title="新增入库" :visible.sync="dialogDetail">
-      <el-form
-        :model="ruleForm"
-        ref="ruleForm"
-        :rules="rules"
-        class="add-form"
-        label-width="80px"
-        label-position="right"
-      >
-        <el-form-item label="快递单号" prop="orderNumber">
-          <el-input v-model="ruleForm.orderNumber"></el-input>
-        </el-form-item>
-        <el-form-item label="快递地址" prop="clientAddress">
-          <el-input v-model="ruleForm.clientAddress"></el-input>
-        </el-form-item>
-        <el-form-item label="收件人" prop="clientName">
-          <el-input v-model="ruleForm.clientName"></el-input>
-        </el-form-item>
-        <el-form-item label="联系方式" prop="clientPhone">
-          <el-input v-model="ruleForm.clientPhone"></el-input>
-        </el-form-item>
-        <el-form-item label="公司名称" prop="company">
-          <el-input v-model="ruleForm.company"></el-input>
-        </el-form-item>
-
-        <el-form-item label="入库时间">
-          <el-col :span="11">
-            <el-form-item prop="orderCreateDate">
-              <el-date-picker
-                type="date"
-                placeholder="选择日期"
-                value-format="yyyy-MM-dd"
-                v-model="ruleForm.orderCreateDate"
-                style="width: 100%"
-              ></el-date-picker>
-            </el-form-item>
-          </el-col>
-        </el-form-item>
-
-        <el-form-item>
-          <el-button type="primary" @click="submitForm('ruleForm')"
-            >确定</el-button
-          >
-          <el-button @click="resetForm('ruleForm')">取消</el-button>
-        </el-form-item>
-      </el-form>
-    </el-dialog>
-    <el-dialog title="数据详情" :visible.sync="dialogDetailImg">
-      
-        <el-button type="primary" @click="dialogDetailImg = false"
-          >确定</el-button
-        >
     
-    </el-dialog>
+    
+
     <pagination
       v-show="total >= 1"
       :total="total"
@@ -224,7 +169,7 @@ export default {
       const statusMap = {
         1: "已经出库",
         0: "未出库",
-        2: "异常件",
+        2:'异常件'
       };
       return statusMap[status];
     },
@@ -240,11 +185,10 @@ export default {
   data() {
     return {
       list: null,
-      value1: null,
+      value1:null,
       showStore: false,
       listLoading: false,
       total: 0,
-      dialogDetailImg: false,
       dialogDetail: false,
 
       ruleForm: {
@@ -279,6 +223,7 @@ export default {
       listQuery: {
         pageNum: 1,
         pageSize: 10,
+        orderStatus:1,
       },
       time: "",
       form: {},
@@ -291,11 +236,11 @@ export default {
   methods: {
     fetchData() {
       this.listLoading = true;
-      console.log(this.value1);
-      if (this.value1 != null) {
-        this.listQuery.startTime = this.value1[0];
-        this.listQuery.endTime = this.value1[1];
-      }
+     console.log(this.value1);
+     if(this.value1!=null){
+        this.listQuery.startTime=this.value1[0];
+      this.listQuery.endTime=this.value1[1];
+     }
       getShopList(this.listQuery).then((response) => {
         this.list = response.data.list;
         this.total = response.data.total;
@@ -318,14 +263,6 @@ export default {
             }
           });
         }
-      });
-    },
-    handleDetail(id) {
-      this.listQuery.orderNumber = id;
-      this.dialogDetailImg = true;
-      getShopList(this.listQuery).then((res) => {
-        console.log(res);
-        this.listQuery.orderNumber =''
       });
     },
     handleDel(id) {

@@ -13,8 +13,7 @@
 
           
             <el-button type="primary" plain @click="fetchData()"
-              >查询</el-button
-            >
+              >查询</el-button>
             <el-button style="float:right" type="primary" plain @click="dialogDetail = true"
               >新增</el-button
             >

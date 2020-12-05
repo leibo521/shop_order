@@ -12,9 +12,32 @@
 
         <el-form-item label="类型">
           <el-select v-model="listQuery.orderStatus">
+            <el-option value="" label="全部"></el-option>
             <el-option value="1" label="已经出库"></el-option>
             <el-option value="0" label="入库中"></el-option>
             <el-option value="2" label="异常件"></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="快递公司">
+          <el-select v-model="listQuery.company">
+            <el-option value="" label="全部"></el-option>
+            <el-option :key="index"
+              v-for="(item,index) in companys"
+              :value="item"
+              :label="item"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="网点">
+          <el-select v-model="listQuery.bId">
+            <el-option value="" label="全部"></el-option>
+            <el-option :key="index"
+              v-for="(item,index) in businesss"
+              :value="item.bId"
+              :label="item.bName"
+            ></el-option>
           </el-select>
         </el-form-item>
 
@@ -39,6 +62,8 @@
         <!-- <el-button style="float:right" type="primary" plain @click="handleAdd">新增</el-button> -->
       </el-row>
     </el-form>
+
+
     <el-table
       v-loading="listLoading"
       :data="list"
@@ -61,6 +86,13 @@
           >
         </template>
       </el-table-column>
+
+      <el-table-column label="网点" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.bName }}</span>
+        </template>
+      </el-table-column>
+
       <el-table-column label="公司名称" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.company }}</span>
@@ -109,11 +141,11 @@
           <span> {{ scope.row.clientStatus | statusFilter }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="是否绑定微信" align="center">
+      <!-- <el-table-column label="是否绑定微信" align="center">
         <template slot-scope="scope">
           <span> {{ scope.row.clientIsWechat | wxstatusFilter }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="操作" width="280" align="center">
         <template slot-scope="scope">
           <el-button
@@ -187,8 +219,11 @@
       </el-form>
     </el-dialog>
 
-
-    <el-dialog @close="detailsClose" title="数据详情(点击可放大)" :visible.sync="dialogDetailImg">
+    <el-dialog
+      @close="detailsClose"
+      title="数据详情(点击可放大)"
+      :visible.sync="dialogDetailImg"
+    >
       <div class="coverImages">
         <div class="wrap">
           <div style="padding: 7px 50px; text-align: center; color: black">
@@ -200,7 +235,11 @@
             style="width: 200px; height: 200px"
             :preview-src-list="srcList"
           >
-            <div slot="error" style=" text-align:center; padding: 50px;" class="image-slot">
+            <div
+              slot="error"
+              style="text-align: center; padding: 50px"
+              class="image-slot"
+            >
               图片暂无
             </div>
           </el-image>
@@ -216,7 +255,11 @@
             style="width: 200px; height: 200px"
             :preview-src-list="srcList"
           >
-            <div slot="error" style=" text-align:center; padding: 50px;" class="image-slot">
+            <div
+              slot="error"
+              style="text-align: center; padding: 50px"
+              class="image-slot"
+            >
               图片暂无
             </div>
           </el-image>
@@ -232,7 +275,11 @@
             style="width: 200px; height: 200px"
             :preview-src-list="srcList"
           >
-            <div slot="error" style=" text-align:center; padding: 50px;" class="image-slot">
+            <div
+              slot="error"
+              style="text-align: center; padding: 50px"
+              class="image-slot"
+            >
               图片暂无
             </div>
           </el-image>
@@ -246,7 +293,6 @@
       </div>
     </el-dialog>
 
-    
     <pagination
       v-show="total >= 1"
       :total="total"
@@ -258,7 +304,14 @@
 </template>
 
 <script>
-import { getShopList, delData, addShopList, outputByAdmin } from "@/api/table";
+import {
+  getCompanys,
+  getShopList,
+  delData,
+  addShopList,
+  outputByAdmin,
+  getBusiness,
+} from "@/api/table";
 import Pagination from "@/components/Pagination"; //
 export default {
   filters: {
@@ -342,13 +395,31 @@ export default {
       images: {
         orderInputPhoto: "",
         orderOutputPhoto: "",
-        orderExceptionPhoto: ''
+        orderExceptionPhoto: "",
       },
       srcList: [],
+      companys: [],
+      businesss: [], // 网点列表
     };
   },
   created() {
     this.fetchData();
+    getCompanys().then((resp) => {
+      if (resp.code == 200) {
+        let datas = resp.data.list;
+        for (let i = 0; i < datas.length; i++) {
+          this.companys.push(datas[i].companyName);
+        }
+      }
+    });
+    getBusiness({pageSize: 30}).then((resp) => {
+      if (resp.code == 200) {
+        let datas = resp.data.list;
+        for (let i = 0; i < datas.length; i++) {
+          this.businesss.push(datas[i]);
+        }
+      }
+    });
   },
   methods: {
     fetchData() {
@@ -388,15 +459,15 @@ export default {
       getShopList(this.listQuery).then((res) => {
         let json = JSON.parse(res.data.list[0].orderDetails);
         if (json.orderInputPhoto != "") {
-          this.images.orderInputPhoto = json.orderInputPhoto
+          this.images.orderInputPhoto = json.orderInputPhoto;
           this.srcList.push(json.orderInputPhoto);
         }
         if (json.orderOutputPhoto != "") {
-          this.images.orderOutputPhoto = json.orderOutputPhoto
+          this.images.orderOutputPhoto = json.orderOutputPhoto;
           this.srcList.push(json.orderOutputPhoto);
         }
         if (json.orderExceptionPhoto != "") {
-          this.orderExceptionPhoto = json.orderExceptionPhoto
+          this.orderExceptionPhoto = json.orderExceptionPhoto;
           this.srcList.push(json.orderExceptionPhoto);
         }
         this.listQuery.orderNumber = "";
@@ -456,11 +527,10 @@ export default {
           });
         });
     },
-    detailsClose(){
-      this.images = {}
-      this.srcList = []
-
-    }
+    detailsClose() {
+      this.images = {};
+      this.srcList = [];
+    },
   },
 };
 </script>
@@ -493,7 +563,7 @@ export default {
   padding: 10px;
   display: inline-block;
 }
-.image-slot{
-  text-align: center;;
+.image-slot {
+  text-align: center;
 }
 </style>

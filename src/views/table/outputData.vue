@@ -2,26 +2,49 @@
   <div class="app-container">
     <el-form :inline="true" :model="listQuery" class="demo-form-inline">
       <el-row>
-        <!-- <el-form-item label="收件人">
-          <el-input v-model="listQuery.name" placeholder="收件人"></el-input>
+        <el-form-item label="编号">
+          <el-input v-model="listQuery.orderCode" placeholder="编号"></el-input>
         </el-form-item>
-      -->
+
         <el-form-item label="电话">
           <el-input v-model="listQuery.number" placeholder="电话"></el-input>
         </el-form-item>
 
-        <!-- <el-form-item width="200px" label="入库时间">
-            <el-date-picker
-              v-model="value1"
-               type="daterange"
-              range-separator="至"
-              format="yyyy-MM-dd "
-               value-format="yyyy-MM-dd HH:mm:ss"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-            >
-            </el-date-picker>
-          </el-form-item> -->
+
+        <el-form-item label="快递公司">
+          <el-select v-model="listQuery.company">
+            <el-option value="" label="全部"></el-option>
+            <el-option :key="index"
+              v-for="(item,index) in companys"
+              :value="item"
+              :label="item"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="网点">
+          <el-select v-model="listQuery.bId">
+            <el-option value="" label="全部"></el-option>
+            <el-option :key="index"
+              v-for="(item,index) in businesss"
+              :value="item.bId"
+              :label="item.bName"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item width="200px" label="入库时间">
+          <el-date-picker
+            v-model="value1"
+            type="daterange"
+            range-separator="至"
+            format="yyyy-MM-dd "
+            value-format="yyyy-MM-dd HH:mm:ss"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+          >
+          </el-date-picker>
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" plain @click="fetchData()">查询</el-button>
           <!-- <el-button type="primary"  plain @click="handleAdd()"
@@ -31,6 +54,7 @@
         <!-- <el-button style="float:right" type="primary" plain @click="handleAdd">新增</el-button> -->
       </el-row>
     </el-form>
+
     <el-table
       v-loading="listLoading"
       :data="list"
@@ -53,6 +77,13 @@
           >
         </template>
       </el-table-column>
+
+      <el-table-column label="网点" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.bName }}
+        </template>
+      </el-table-column>
+
       <el-table-column label="公司名称" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.company }}</span>
@@ -101,11 +132,11 @@
           <span> {{ scope.row.clientStatus | statusFilter }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="是否绑定微信" align="center">
+      <!-- <el-table-column label="是否绑定微信" align="center">
         <template slot-scope="scope">
           <span> {{ scope.row.clientIsWechat | wxstatusFilter }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <!-- <el-table-column label="操作" width="280" align="center">
         <template slot-scope="scope">
           <el-button
@@ -216,7 +247,14 @@
 </template>
 
 <script>
-import { getShopList, delData, addShopList, outputByAdmin } from "@/api/table";
+import {
+  getBusiness,
+  getCompanys,
+  getShopList,
+  delData,
+  addShopList,
+  outputByAdmin,
+} from "@/api/table";
 import Pagination from "@/components/Pagination"; //
 export default {
   filters: {
@@ -303,10 +341,28 @@ export default {
         orderExceptionPhoto: "",
       },
       srcList: [],
+      companys: [],
+      businesss: [], // 网点列表
     };
   },
   created() {
     this.fetchData();
+    getCompanys().then((resp) => {
+      if (resp.code == 200) {
+        let datas = resp.data.list;
+        for (let i = 0; i < datas.length; i++) {
+          this.companys.push(datas[i].companyName);
+        }
+      }
+    });
+    getBusiness({ pageSize: 30 }).then((resp) => {
+      if (resp.code == 200) {
+        let datas = resp.data.list;
+        for (let i = 0; i < datas.length; i++) {
+          this.businesss.push(datas[i]);
+        }
+      }
+    });
   },
   methods: {
     fetchData() {

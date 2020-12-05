@@ -51,7 +51,7 @@
         >登陆</el-button
       >
       <el-button
-        :loading="loading"
+       
         type="primary"
         style="margin-bottom: 30px"
         @click.native.prevent="handlRegister"
@@ -79,12 +79,13 @@
       <el-form-item label="用户密码" prop="cPassword">
         <el-input type="password" v-model="registerForm.cPassword"></el-input>
       </el-form-item>
-      <el-form-item label="网点地址" prop="cAddress">
+      <el-form-item label="网点地址" v-show="registerForm.registerType=='business'" prop="cAddress">
         <el-input v-model="registerForm.cAddress"></el-input>
       </el-form-item>
       <el-form-item label="注册类型">
         <el-radio-group v-model="registerForm.registerType">
-          <el-radio value="" label="business">网点</el-radio>
+          <el-radio value="business" label="business">网点</el-radio>
+          <el-radio value="user" label="user">用户</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-button
@@ -95,7 +96,7 @@
         >注册</el-button
       >
       <el-button
-        :loading="loading"
+        
         type="primary"
         style="margin-bottom: 30px"
         @click.native.prevent="handleLogin2"
@@ -129,7 +130,7 @@ export default {
       loginForm: {
         userPhone: "admin",
         userPassword: "159263",
-        userType: "admin",
+        userType: '',
       },
       loginRules: {
         userPhone: [
@@ -194,6 +195,7 @@ export default {
       this.$refs.loginForm.resetFields();
     },
     handlRegister2() {
+      this.loginForm.userType=this.registerForm.registerType;
       this.$refs.registerForm.validate((valid) => {
         if (valid) {
           register(this.registerForm)
@@ -217,6 +219,9 @@ export default {
     },
     handleLogin() {
       this.loginType = true;
+      if( this.loginForm.userPhone=='admin'){
+         this.loginForm.userType='admin'
+      }
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
           this.loading = true;

@@ -50,7 +50,7 @@ service.interceptors.response.use(
    */
   response => {
     const res = response.data
-  
+  console.log(res.code)
     // if the custom code is not 20000, it is judged as an error.
     if (res.code == 500) {
       Message({
@@ -58,16 +58,22 @@ service.interceptors.response.use(
         type: 'error',
         duration: 5 * 1000
       })
-      if(res.code=='999'){
+      router.replace({ path:'/login' })
+      return Promise.reject(new Error(res.message || 'Error'))
+    } 
+      if(res.code==401){
+     
         Message({
           message: res.message || 'Error',
           type: 'error',
           duration: 5 * 1000
         })
+        sessionStorage.removeItem('token');
         router.replace({ path:'/login' })
+        return Promise.reject(new Error(res.message || 'Error'))
       }
-      return Promise.reject(new Error(res.message || 'Error'))
-    } 
+     
+   
     
     else {
       return res

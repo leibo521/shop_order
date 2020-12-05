@@ -14,9 +14,7 @@
       </div>
 
       <el-form-item prop="userPhone">
-        <span class="svg-container">
-          <svg-icon icon-class="user" />
-        </span>
+        <i style="color:#fff" class="el-icon-phone"></i>
         <el-input
           ref="userPhone"
           v-model="loginForm.userPhone"
@@ -29,9 +27,8 @@
       </el-form-item>
 
       <el-form-item prop="userPassword">
-        <span class="svg-container">
-          <svg-icon icon-class="userPassword" />
-        </span>
+               <i style="color:#fff" class="el-icon-edit-outline"></i>
+
         <el-input
           v-model="loginForm.userPassword"
           type="password"

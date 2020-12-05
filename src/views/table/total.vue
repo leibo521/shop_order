@@ -13,6 +13,7 @@
           <el-form-item width="200px" label="网点">
             <!-- <el-input v-model="listQuery.company" placeholder="快递公司名称"></el-input> -->
             <el-select v-model="listQuery2.businessId" placeholder="请选择">
+              <el-option value="" label="全部"></el-option>
               <el-option
                 v-for="item in options2"
                 :key="item.bId"
@@ -84,6 +85,7 @@
           <el-form-item width="200px" label="快递公司名称">
             <!-- <el-input v-model="listQuery.company" placeholder="快递公司名称"></el-input> -->
             <el-select v-model="listQuery.company" placeholder="请选择">
+              <el-option value="" label="全部" ></el-option>
               <el-option
                 v-for="item in options"
                 :key="item.companyId"

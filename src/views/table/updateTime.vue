@@ -22,8 +22,9 @@
         <el-form-item label="快递公司">
           <el-select v-model="listQuery.company">
             <el-option value="" label="全部"></el-option>
-            <el-option :key="index"
-              v-for="(item,index) in companys"
+            <el-option
+              :key="index"
+              v-for="(item, index) in companys"
               :value="item"
               :label="item"
             ></el-option>
@@ -33,8 +34,9 @@
         <el-form-item label="网点">
           <el-select v-model="listQuery.bId">
             <el-option value="" label="全部"></el-option>
-            <el-option :key="index"
-              v-for="(item,index) in businesss"
+            <el-option
+              :key="index"
+              v-for="(item, index) in businesss"
               :value="item.bId"
               :label="item.bName"
             ></el-option>
@@ -131,7 +133,7 @@
             type="primary"
             size="mini"
             icon="el-icon-s-tools"
-            :disabled="scope.row.orderStatus == 0 ? false : true"
+            :disabled="(scope.row.orderStatus != 1 && scope.row.orderStatus != 21) ? false : true"
           >
             出库
           </el-button>
@@ -348,6 +350,29 @@ export default {
         this.total = response.data.total;
         this.listLoading = false;
       });
+    },
+    handleOut(id) {
+      this.$confirm("确定出库该数据?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "error",
+      })
+        .then(() => {
+          outputByAdmin({ orderId: id }).then((response) => {
+            if (response.code === 200) {
+              this.$message.success(response.message);
+              this.fetchData();
+            } else {
+              this.$message.error(response.message);
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
+        });
     },
   },
 };

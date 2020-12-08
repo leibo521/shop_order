@@ -10,12 +10,12 @@
           <el-input v-model="listQuery.number" placeholder="电话"></el-input>
         </el-form-item>
 
-
         <el-form-item label="快递公司">
           <el-select v-model="listQuery.company">
             <el-option value="" label="全部"></el-option>
-            <el-option :key="index"
-              v-for="(item,index) in companys"
+            <el-option
+              :key="index"
+              v-for="(item, index) in companys"
               :value="item"
               :label="item"
             ></el-option>
@@ -25,8 +25,9 @@
         <el-form-item label="网点">
           <el-select v-model="listQuery.bId">
             <el-option value="" label="全部"></el-option>
-            <el-option :key="index"
-              v-for="(item,index) in businesss"
+            <el-option
+              :key="index"
+              v-for="(item, index) in businesss"
               :value="item.bId"
               :label="item.bName"
             ></el-option>
@@ -131,12 +132,8 @@
           <span> {{ scope.row.clientStatus | statusFilter }}</span>
         </template>
       </el-table-column>
-      <!-- <el-table-column label="是否绑定微信" align="center">
-        <template slot-scope="scope">
-          <span> {{ scope.row.clientIsWechat | wxstatusFilter }}</span>
-        </template>
-      </el-table-column> -->
-      <!-- <el-table-column label="操作" width="280" align="center">
+
+      <el-table-column label="操作" width="280" align="center">
         <template slot-scope="scope">
           <el-button
             @click="handleOut(scope.row.orderId)"
@@ -144,7 +141,11 @@
             type="primary"
             size="mini"
             icon="el-icon-s-tools"
-            :disabled="scope.row.orderStatus == 0 ? false : true"
+            :disabled="
+              scope.row.orderStatus != 1 && scope.row.orderStatus != 21
+                ? false
+                : true
+            "
           >
             出库
           </el-button>
@@ -158,7 +159,7 @@
             >删除</el-button
           >
         </template>
-      </el-table-column> -->
+      </el-table-column>
     </el-table>
 
     <el-dialog
@@ -246,8 +247,14 @@
 </template>
 
 <script>
-import {   getBusiness,
-  getCompanys, getShopList, delData, addShopList, outputByAdmin } from "@/api/table";
+import {
+  getBusiness,
+  getCompanys,
+  getShopList,
+  delData,
+  addShopList,
+  outputByAdmin,
+} from "@/api/table";
 import Pagination from "@/components/Pagination"; //
 export default {
   filters: {
@@ -334,13 +341,13 @@ export default {
         orderExceptionPhoto: "",
       },
       srcList: [],
-            companys: [],
+      companys: [],
       businesss: [], // 网点列表
     };
   },
   created() {
     this.fetchData();
-        getCompanys().then((resp) => {
+    getCompanys().then((resp) => {
       if (resp.code == 200) {
         let datas = resp.data.list;
         for (let i = 0; i < datas.length; i++) {
@@ -356,7 +363,6 @@ export default {
         }
       }
     });
-  
   },
   methods: {
     fetchData() {

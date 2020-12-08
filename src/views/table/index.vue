@@ -154,7 +154,7 @@
             type="primary"
             size="mini"
             icon="el-icon-s-tools"
-            :disabled="scope.row.orderStatus == 0 ? false : true"
+            :disabled="(scope.row.orderStatus != 1 && scope.row.orderStatus != 21) ? false : true"
           >
             出库
           </el-button>

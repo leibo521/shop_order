@@ -7,7 +7,7 @@ import Qs from 'qs'
 // vue.use(router)
 // create an axios instance
 const service = axios.create({
-  baseURL: 'http://124.70.75.18:9080/', // url = base url + request url
+  baseURL: 'https://shop.llhmyp.com/', // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 5000, // request timeout
   transformRequest: [function(data) { 
